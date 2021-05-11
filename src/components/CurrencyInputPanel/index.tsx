@@ -217,7 +217,7 @@ export default function CurrencyInputPanel({
             className="open-currency-select-button"
             onClick={() => {
               if (onCurrencySelect) {
-                setModalOpen(true)
+                setModalOpen(false)
               }
             }}
           >
@@ -236,15 +236,10 @@ export default function CurrencyInputPanel({
                   </StyledTokenName>
                 ) : (
                   <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
-                    {(currency && currency.symbol && currency.symbol.length > 20
-                      ? currency.symbol.slice(0, 4) +
-                        '...' +
-                        currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                      : currency?.symbol) || t('selectToken')}
+                    Uniswap-Interface V2
                   </StyledTokenName>
                 )}
               </RowFixed>
-              {onCurrencySelect && <StyledDropDown selected={!!currency} />}
             </Aligner>
           </CurrencySelect>
           {!hideInput && (
@@ -252,6 +247,7 @@ export default function CurrencyInputPanel({
               <NumericalInput
                 className="token-amount-input"
                 value={value}
+                placeholder={'2019.0.1'}
                 onUserInput={(val) => {
                   onUserInput(val)
                 }}
@@ -271,7 +267,7 @@ export default function CurrencyInputPanel({
                     fontSize={14}
                     style={{ display: 'inline', cursor: 'pointer' }}
                   >
-                    {!hideBalance && !!currency && selectedCurrencyBalance
+                    {hideBalance && !!currency && selectedCurrencyBalance
                       ? (customBalanceText ?? 'Balance: ') +
                         selectedCurrencyBalance?.toSignificant(4) +
                         ' ' +

@@ -17,7 +17,7 @@ export default function SwapHeader() {
       <RowBetween>
         <RowFixed>
           <TYPE.black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
-            Swap{' '}
+            Repo{' '}
           </TYPE.black>
         </RowFixed>
         <RowFixed>

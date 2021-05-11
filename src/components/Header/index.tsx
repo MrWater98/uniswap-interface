@@ -331,7 +331,7 @@ export default function Header() {
       </HeaderRow>
       <HeaderLinks>
         <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-          {t('swap')}
+          repo
         </StyledNavLink>
         <StyledNavLink
           id={`pool-nav-link`}
@@ -344,14 +344,11 @@ export default function Header() {
             pathname.startsWith('/find')
           }
         >
-          {t('pool')}
+          gallery
         </StyledNavLink>
         <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
           Vote
         </StyledNavLink>
-        <StyledExternalLink id={`stake-nav-link`} href={'https://info.uniswap.org'}>
-          Charts <span style={{ fontSize: '11px', textDecoration: 'none !important' }}>↗</span>
-        </StyledExternalLink>
       </HeaderLinks>
       <HeaderControls>
         <HeaderElement>
