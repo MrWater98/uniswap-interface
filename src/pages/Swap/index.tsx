@@ -425,6 +425,20 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
               showCommonBases={true}
               id="swap-currency-output"
             />
+            <CurrencyInputPanel
+              value={formattedAmounts[Field.OUTPUT]}
+              onUserInput={handleTypeOutput}
+              label={independentField === Field.INPUT && !showWrap ? 'To (at least)' : 'To'}
+              showMaxButton={false}
+              hideBalance={false}
+              fiatValue={fiatValueOutput ?? undefined}
+              priceImpact={priceImpact}
+              currency={currencies[Field.OUTPUT]}
+              onCurrencySelect={handleOutputSelect}
+              otherCurrency={currencies[Field.INPUT]}
+              showCommonBases={true}
+              id="swap-currency-output"
+            />
             {recipient !== null && !showWrap ? (
               <>
                 <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>

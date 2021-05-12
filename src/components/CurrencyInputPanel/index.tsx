@@ -249,7 +249,7 @@ export default function CurrencyInputPanel({
               <NumericalInput
                 className="token-amount-input"
                 value={value}
-                placeholder={'2019.0.1'}
+                placeholder={'Onwer'}
                 onUserInput={(val) => {
                   onUserInput(val)
                 }}
@@ -281,7 +281,7 @@ export default function CurrencyInputPanel({
                   ) : null}
                 </RowFixed>
               ) : (
-                '-'
+                ''
               )}
 
               <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />

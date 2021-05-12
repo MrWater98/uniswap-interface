@@ -4,6 +4,8 @@ import SettingsTab from '../Settings'
 
 import { RowBetween, RowFixed } from '../Row'
 import { TYPE } from '../../theme'
+import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import { ButtonGray, ButtonLight, ButtonPrimary, ButtonBlue } from '../../components/Button'
 
 const StyledSwapHeader = styled.div`
   padding: 1rem 1.25rem 0.5rem 1.25rem;
@@ -17,8 +19,17 @@ export default function SwapHeader() {
       <RowBetween>
         <RowFixed>
           <TYPE.black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
-            Repo{' '}
+            Repo
           </TYPE.black>
+          <BottomGrouping>
+            <ButtonBlue>Button1</ButtonBlue>
+          </BottomGrouping>
+          <BottomGrouping>
+            <ButtonGray>Button2</ButtonGray>
+          </BottomGrouping>
+          <BottomGrouping>
+            <ButtonLight>Button3</ButtonLight>
+          </BottomGrouping>
         </RowFixed>
         <RowFixed>
           {/* <TradeInfo disabled={!trade} trade={trade} /> */}
