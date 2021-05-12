@@ -10,8 +10,8 @@ import { RowBetween } from 'components/Row'
 
 const CTASection = styled.section`
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 8px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 10px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-template-columns: auto;
@@ -120,29 +120,10 @@ export default function CTACards() {
 
   return (
     <CTASection>
-      <CTA1 href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide'}>
-        <ResponsiveColumn>
-          <HeaderText>{t('Uniswap V3 is here!')}</HeaderText>
-          <TYPE.body fontWeight={300} style={{ alignItems: 'center', display: 'flex', maxWidth: '80%' }}>
-            {t('Check out our v3 LP walkthrough and migration guides.')}
-          </TYPE.body>
-          <RowBetween align="flex-end">
-            <HeaderText>{t('↗')}</HeaderText>
-            <StyledImage src={Squiggle} />
-          </RowBetween>
-        </ResponsiveColumn>
-      </CTA1>
-      <CTA2 href={'https://info.uniswap.org/#/pools'}>
-        <ResponsiveColumn>
-          <AutoColumn gap="0px">
-            <HeaderText style={{ alignSelf: 'flex-start' }}>{t('Top pools')}</HeaderText>
-            <TYPE.body fontWeight={300} style={{ alignSelf: 'flex-start' }}>
-              {t('Explore popular pools on Uniswap Analytics.')}
-            </TYPE.body>
-          </AutoColumn>
-          <HeaderText style={{ alignSelf: 'flex-end' }}>{t('↗')}</HeaderText>
-        </ResponsiveColumn>
-      </CTA2>
+      <img src="/images/rare-NFTDescriptor.svg" height="95%" width="95%" />
+      <img src="/images/rare-NFTDescriptor.svg" height="95%" width="95%" />
+      <img src="/images/rare-NFTDescriptor.svg" height="95%" width="95%" />
+      <img src="/images/rare-NFTDescriptor.svg" height="95%" width="95%" />
     </CTASection>
   )
 }

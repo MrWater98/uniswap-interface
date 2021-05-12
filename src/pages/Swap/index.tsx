@@ -59,6 +59,9 @@ import AppBody from '../AppBody'
 import { githubProvider } from '../../config/authMethods'
 import socialMediaAuth from 'service/auth'
 import firebase from 'config/firebase.config'
+import { supportedChainId } from 'utils'
+
+import ReactDOM from 'react-dom'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -70,10 +73,18 @@ const StyledInfo = styled(Info)`
   }
 `
 
-export default function Swap({ history }: RouteComponentProps) {
+export default function Swap(this: any, { history }: RouteComponentProps) {
   const handleOnClick = async (provider: firebase.auth.AuthProvider) => {
     const res = await socialMediaAuth(provider)
-    console.log(res)
+    setSwapState({
+      showConfirm: false,
+      tradeToConfirm,
+      attemptingTxn,
+      swapErrorMessage,
+      txHash,
+      githubID: res.providerData.uid,
+    })
+    console.log(res.providerData[0].uid)
   }
 
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -180,18 +191,20 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [history])
 
   // modal and loading
-  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
+  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash, githubID }, setSwapState] = useState<{
     showConfirm: boolean
     tradeToConfirm: V2Trade | V3Trade | undefined
     attemptingTxn: boolean
     swapErrorMessage: string | undefined
     txHash: string | undefined
+    githubID: string | undefined
   }>({
     showConfirm: false,
     tradeToConfirm: undefined,
     attemptingTxn: false,
     swapErrorMessage: undefined,
     txHash: undefined,
+    githubID: undefined,
   })
 
   const formattedAmounts = {
@@ -259,10 +272,24 @@ export default function Swap({ history }: RouteComponentProps) {
     if (priceImpact && !confirmPriceImpactWithoutFee(priceImpact)) {
       return
     }
-    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
+    setSwapState({
+      attemptingTxn: true,
+      tradeToConfirm,
+      showConfirm,
+      swapErrorMessage: undefined,
+      txHash: undefined,
+      githubID: undefined,
+    })
     swapCallback()
       .then((hash) => {
-        setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
+        setSwapState({
+          attemptingTxn: false,
+          tradeToConfirm,
+          showConfirm,
+          swapErrorMessage: undefined,
+          txHash: hash,
+          githubID: undefined,
+        })
 
         ReactGA.event({
           category: 'Swap',
@@ -287,6 +314,7 @@ export default function Swap({ history }: RouteComponentProps) {
           showConfirm,
           swapErrorMessage: error.message,
           txHash: undefined,
+          githubID: undefined,
         })
       })
   }, [
@@ -326,7 +354,7 @@ export default function Swap({ history }: RouteComponentProps) {
     !(priceImpactSeverity > 3 && !isExpertMode)
 
   const handleConfirmDismiss = useCallback(() => {
-    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
+    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash, githubID })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onUserInput(Field.INPUT, '')
@@ -334,7 +362,7 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
-    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
+    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm, githubID })
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
   const handleInputSelect = useCallback(
@@ -383,23 +411,20 @@ export default function Swap({ history }: RouteComponentProps) {
           />
 
           <AutoColumn gap={'md'}>
-            <div style={{ display: 'relative' }}>
-              <CurrencyInputPanel
-                value={formattedAmounts[Field.OUTPUT]}
-                onUserInput={handleTypeOutput}
-                label={independentField === Field.INPUT && !showWrap ? 'To (at least)' : 'To'}
-                showMaxButton={false}
-                hideBalance={false}
-                fiatValue={fiatValueOutput ?? undefined}
-                priceImpact={priceImpact}
-                currency={currencies[Field.OUTPUT]}
-                onCurrencySelect={handleOutputSelect}
-                otherCurrency={currencies[Field.INPUT]}
-                showCommonBases={true}
-                id="swap-currency-output"
-              />
-            </div>
-
+            <CurrencyInputPanel
+              value={formattedAmounts[Field.OUTPUT]}
+              onUserInput={handleTypeOutput}
+              label={independentField === Field.INPUT && !showWrap ? 'To (at least)' : 'To'}
+              showMaxButton={false}
+              hideBalance={false}
+              fiatValue={fiatValueOutput ?? undefined}
+              priceImpact={priceImpact}
+              currency={currencies[Field.OUTPUT]}
+              onCurrencySelect={handleOutputSelect}
+              otherCurrency={currencies[Field.INPUT]}
+              showCommonBases={true}
+              id="swap-currency-output"
+            />
             {recipient !== null && !showWrap ? (
               <>
                 <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
@@ -556,6 +581,7 @@ export default function Swap({ history }: RouteComponentProps) {
                             swapErrorMessage: undefined,
                             showConfirm: true,
                             txHash: undefined,
+                            githubID: undefined,
                           })
                         }
                       }}
@@ -586,6 +612,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         swapErrorMessage: undefined,
                         showConfirm: true,
                         txHash: undefined,
+                        githubID: undefined,
                       })
                     }
                   }}

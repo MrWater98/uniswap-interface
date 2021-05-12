@@ -165,6 +165,7 @@ interface CurrencyInputPanelProps {
   showCommonBases?: boolean
   customBalanceText?: string
   locked?: boolean
+  githubID?: undefined | string
 }
 
 export default function CurrencyInputPanel({
@@ -180,6 +181,7 @@ export default function CurrencyInputPanel({
   customBalanceText,
   fiatValue,
   priceImpact,
+  githubID,
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
