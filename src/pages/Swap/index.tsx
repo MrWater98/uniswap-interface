@@ -39,7 +39,7 @@ import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { Field } from '../../state/swap/actions'
+import { Field, GithubInfo } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
   useDerivedSwapInfo,
@@ -62,6 +62,7 @@ import firebase from 'config/firebase.config'
 import { supportedChainId } from 'utils'
 
 import ReactDOM from 'react-dom'
+import GithubRepoPanel from '../../components/GithubRepoPanel'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -73,20 +74,14 @@ const StyledInfo = styled(Info)`
   }
 `
 
-export default function Swap(this: any, { history }: RouteComponentProps) {
-  const handleOnClick = async (provider: firebase.auth.AuthProvider) => {
-    const res = await socialMediaAuth(provider)
-    setSwapState({
-      showConfirm: false,
-      tradeToConfirm,
-      attemptingTxn,
-      swapErrorMessage,
-      txHash,
-      githubID: res.providerData.uid,
-    })
-    console.log(res.providerData[0].uid)
+export function ReposGithubInfo(githubInfo: any): string[] {
+  if (githubInfo === null) {
+    return []
   }
+  return githubInfo.repos
+}
 
+export default function Swap(this: any, { history }: RouteComponentProps) {
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -124,7 +119,7 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
   const [allowedSlippage] = useUserSlippageTolerance()
 
   // swap state
-  const { independentField, typedValue, recipient } = useSwapState()
+  const { independentField, typedValue, recipient, githubInfo } = useSwapState()
   const {
     v2Trade,
     v3TradeState: { trade: v3Trade, state: v3TradeState },
@@ -167,10 +162,20 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
   const fiatValueOutput = useUSDCValue(parsedAmounts[Field.OUTPUT])
   const priceImpact = computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)
 
-  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
+  const {
+    onSwitchTokens,
+    onCurrencySelection,
+    onUserInput,
+    onChangeRecipient,
+    onChangeGithubInfo,
+  } = useSwapActionHandlers()
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
-
+  const handleOnClick = async (provider: firebase.auth.AuthProvider) => {
+    const res = await socialMediaAuth(provider)
+    console.log(res.providerData[0].uid)
+    onChangeGithubInfo({ githubID: res.providerData[0].uid, repos: ['repo1', 'repo2', 'repo3'] })
+  }
   const handleTypeInput = useCallback(
     (value: string) => {
       onUserInput(Field.INPUT, value)
@@ -191,21 +196,22 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
   }, [history])
 
   // modal and loading
-  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash, githubID }, setSwapState] = useState<{
+  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
     showConfirm: boolean
     tradeToConfirm: V2Trade | V3Trade | undefined
     attemptingTxn: boolean
     swapErrorMessage: string | undefined
     txHash: string | undefined
-    githubID: string | undefined
   }>({
     showConfirm: false,
     tradeToConfirm: undefined,
     attemptingTxn: false,
     swapErrorMessage: undefined,
     txHash: undefined,
-    githubID: undefined,
   })
+
+  const repos = ReposGithubInfo(githubInfo)
+  console.log('githubInfo: ', repos)
 
   const formattedAmounts = {
     [independentField]: typedValue,
@@ -272,25 +278,8 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
     if (priceImpact && !confirmPriceImpactWithoutFee(priceImpact)) {
       return
     }
-    setSwapState({
-      attemptingTxn: true,
-      tradeToConfirm,
-      showConfirm,
-      swapErrorMessage: undefined,
-      txHash: undefined,
-      githubID: undefined,
-    })
     swapCallback()
       .then((hash) => {
-        setSwapState({
-          attemptingTxn: false,
-          tradeToConfirm,
-          showConfirm,
-          swapErrorMessage: undefined,
-          txHash: hash,
-          githubID: undefined,
-        })
-
         ReactGA.event({
           category: 'Swap',
           action:
@@ -314,7 +303,6 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
           showConfirm,
           swapErrorMessage: error.message,
           txHash: undefined,
-          githubID: undefined,
         })
       })
   }, [
@@ -354,7 +342,7 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
     !(priceImpactSeverity > 3 && !isExpertMode)
 
   const handleConfirmDismiss = useCallback(() => {
-    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash, githubID })
+    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onUserInput(Field.INPUT, '')
@@ -362,7 +350,7 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
-    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm, githubID })
+    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
   const handleInputSelect = useCallback(
@@ -411,34 +399,24 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
           />
 
           <AutoColumn gap={'md'}>
-            <CurrencyInputPanel
-              value={formattedAmounts[Field.OUTPUT]}
-              onUserInput={handleTypeOutput}
-              label={independentField === Field.INPUT && !showWrap ? 'To (at least)' : 'To'}
-              showMaxButton={false}
-              hideBalance={false}
-              fiatValue={fiatValueOutput ?? undefined}
-              priceImpact={priceImpact}
-              currency={currencies[Field.OUTPUT]}
-              onCurrencySelect={handleOutputSelect}
-              otherCurrency={currencies[Field.INPUT]}
-              showCommonBases={true}
-              id="swap-currency-output"
-            />
-            <CurrencyInputPanel
-              value={formattedAmounts[Field.OUTPUT]}
-              onUserInput={handleTypeOutput}
-              label={independentField === Field.INPUT && !showWrap ? 'To (at least)' : 'To'}
-              showMaxButton={false}
-              hideBalance={false}
-              fiatValue={fiatValueOutput ?? undefined}
-              priceImpact={priceImpact}
-              currency={currencies[Field.OUTPUT]}
-              onCurrencySelect={handleOutputSelect}
-              otherCurrency={currencies[Field.INPUT]}
-              showCommonBases={true}
-              id="swap-currency-output"
-            />
+            {repos.map((repo: string, i) => (
+              <GithubRepoPanel
+                key={i}
+                value={formattedAmounts[Field.OUTPUT]}
+                onUserInput={handleTypeOutput}
+                label={independentField === Field.INPUT && !showWrap ? 'To (at least)' : 'To'}
+                showMaxButton={false}
+                hideBalance={false}
+                fiatValue={fiatValueOutput ?? undefined}
+                priceImpact={priceImpact}
+                currency={currencies[Field.OUTPUT]}
+                onCurrencySelect={handleOutputSelect}
+                otherCurrency={currencies[Field.INPUT]}
+                showCommonBases={true}
+                githubID={repo}
+                id="swap-currency-output"
+              />
+            ))}
             {recipient !== null && !showWrap ? (
               <>
                 <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
@@ -595,7 +573,6 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
                             swapErrorMessage: undefined,
                             showConfirm: true,
                             txHash: undefined,
-                            githubID: undefined,
                           })
                         }
                       }}
@@ -626,7 +603,6 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
                         swapErrorMessage: undefined,
                         showConfirm: true,
                         txHash: undefined,
-                        githubID: undefined,
                       })
                     }
                   }}
