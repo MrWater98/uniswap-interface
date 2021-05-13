@@ -171,11 +171,29 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
   } = useSwapActionHandlers()
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
+
   const handleOnClick = async (provider: firebase.auth.AuthProvider) => {
     const res = await socialMediaAuth(provider)
     console.log(res.providerData[0].uid)
-    onChangeGithubInfo({ githubID: res.providerData[0].uid, repos: ['repo1', 'repo2', 'repo3'] })
+
+    let userName
+    fetch('https://api.github.com/user/' + res.providerData[0].uid)
+      .then((res) => res.json())
+      .then((result) => {
+        userName = result.login
+        fetch('https://api.github.com/users/' + userName + '/repos')
+          .then((res) => res.json())
+          .then((result) => {
+            console.log(result)
+            let nameList: string[] = []
+            for (const p in result) {
+              nameList.push(result[p].name)
+            }
+            onChangeGithubInfo({ githubID: res.providerData[0].uid, repos: nameList })
+          })
+      })
   }
+
   const handleTypeInput = useCallback(
     (value: string) => {
       onUserInput(Field.INPUT, value)
