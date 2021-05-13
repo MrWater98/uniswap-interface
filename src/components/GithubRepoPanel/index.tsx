@@ -147,7 +147,7 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   `};
 `
 
-interface CurrencyInputPanelProps {
+interface GithubRepoPanelProps {
   value: string
   onUserInput: (value: string) => void
   onMax?: () => void
@@ -168,7 +168,33 @@ interface CurrencyInputPanelProps {
   githubID?: undefined | string
 }
 
-export default function CurrencyInputPanel({
+interface CommitsProps {
+  user: string
+  repo: string
+}
+
+function Commits({ user, repo }: CommitsProps) {
+  fetch(`https://api.github.com/repos/${user}/${repo}/commits`)
+    .then((res) => res.text())
+    .then(
+      (result) => {
+        return (
+          <div>
+            <h1>Hello, world!</h1>
+            <h2>It is {result}.</h2>
+          </div>
+        )
+      },
+      // Note: it's important to handle errors here
+      // instead of a catch() block so that we don't swallow
+      // exceptions from actual bugs in components.
+      (error) => {
+        return <div></div>
+      }
+    )
+}
+
+export default function GithubRepoPanel({
   value,
   onUserInput,
   onMax,
@@ -187,7 +213,7 @@ export default function CurrencyInputPanel({
   hideInput = false,
   locked = false,
   ...rest
-}: CurrencyInputPanelProps) {
+}: GithubRepoPanelProps) {
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
@@ -238,7 +264,7 @@ export default function CurrencyInputPanel({
                   </StyledTokenName>
                 ) : (
                   <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
-                    Uniswap-Interface a
+                    {githubID}
                   </StyledTokenName>
                 )}
               </RowFixed>
@@ -249,7 +275,7 @@ export default function CurrencyInputPanel({
               <NumericalInput
                 className="token-amount-input"
                 value={value}
-                placeholder={'Onwer'}
+                placeholder={'Owner'}
                 onUserInput={(val) => {
                   onUserInput(val)
                 }}

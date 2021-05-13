@@ -1,5 +1,14 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import {
+  Field,
+  GithubInfo,
+  replaceSwapState,
+  selectCurrency,
+  setGithubInfo,
+  setRecipient,
+  switchCurrencies,
+  typeInput,
+} from './actions'
 
 export interface SwapState {
   readonly independentField: Field
@@ -12,6 +21,7 @@ export interface SwapState {
   }
   // the typed recipient address or ENS name, or null if swap should go to sender
   readonly recipient: string | null
+  readonly githubInfo: GithubInfo | null
 }
 
 const initialState: SwapState = {
@@ -24,13 +34,14 @@ const initialState: SwapState = {
     currencyId: '',
   },
   recipient: null,
+  githubInfo: { githubID: '', repos: [] },
 }
 
 export default createReducer<SwapState>(initialState, (builder) =>
   builder
     .addCase(
       replaceSwapState,
-      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId } }) => {
+      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId, githubInfo } }) => {
         return {
           [Field.INPUT]: {
             currencyId: inputCurrencyId,
@@ -41,6 +52,7 @@ export default createReducer<SwapState>(initialState, (builder) =>
           independentField: field,
           typedValue: typedValue,
           recipient,
+          githubInfo,
         }
       }
     )
@@ -79,5 +91,11 @@ export default createReducer<SwapState>(initialState, (builder) =>
     })
     .addCase(setRecipient, (state, { payload: { recipient } }) => {
       state.recipient = recipient
+    })
+    .addCase(setGithubInfo, (state, { payload: { githubInfo } }) => {
+      return {
+        ...state,
+        githubInfo: githubInfo,
+      }
     })
 )

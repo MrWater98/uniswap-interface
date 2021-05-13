@@ -14,7 +14,16 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import {
+  Field,
+  GithubInfo,
+  replaceSwapState,
+  selectCurrency,
+  setGithubInfo,
+  setRecipient,
+  switchCurrencies,
+  typeInput,
+} from './actions'
 import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
 
@@ -27,6 +36,7 @@ export function useSwapActionHandlers(): {
   onSwitchTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
+  onChangeGithubInfo: (githubInfo: GithubInfo | null) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
   const onCurrencySelection = useCallback(
@@ -59,11 +69,19 @@ export function useSwapActionHandlers(): {
     [dispatch]
   )
 
+  const onChangeGithubInfo = useCallback(
+    (githubInfo: GithubInfo | null) => {
+      dispatch(setGithubInfo({ githubInfo }))
+    },
+    [dispatch]
+  )
+
   return {
     onSwitchTokens,
     onCurrencySelection,
     onUserInput,
     onChangeRecipient,
+    onChangeGithubInfo,
   }
 }
 
@@ -233,6 +251,14 @@ function validatedRecipient(recipient: any): string | null {
   return null
 }
 
+export function validatedGithubInfo(githubInfo: any): GithubInfo | null {
+  if (githubInfo === undefined) {
+    console.log('githubInfo == undefined')
+    return null
+  }
+  return githubInfo
+}
+
 export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency)
@@ -245,6 +271,7 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
   }
 
   const recipient = validatedRecipient(parsedQs.recipient)
+  const githubInfo = validatedGithubInfo(parsedQs.githubInfo)
 
   return {
     [Field.INPUT]: {
@@ -256,6 +283,7 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
     typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
     independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
     recipient,
+    githubInfo,
   }
 }
 
@@ -281,6 +309,7 @@ export function useDefaultsFromURLSearch():
         inputCurrencyId: parsed[Field.INPUT].currencyId,
         outputCurrencyId: parsed[Field.OUTPUT].currencyId,
         recipient: parsed.recipient,
+        githubInfo: parsed.githubInfo,
       })
     )
 
