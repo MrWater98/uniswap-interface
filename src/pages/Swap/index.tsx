@@ -60,6 +60,7 @@ import { githubProvider } from '../../config/authMethods'
 import socialMediaAuth from 'service/auth'
 import firebase from 'config/firebase.config'
 import { supportedChainId } from 'utils'
+import { commitsData } from './commits'
 
 import ReactDOM from 'react-dom'
 import GithubRepoPanel from '../../components/GithubRepoPanel'
@@ -175,25 +176,59 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
   const handleOnClick = async (provider: firebase.auth.AuthProvider) => {
     const res = await socialMediaAuth(provider)
     console.log(res.providerData[0].uid)
-
-    let userName
     fetch('https://api.github.com/user/' + res.providerData[0].uid)
       .then((res) => res.json())
       .then((result) => {
-        userName = result.login
+        const userName = result.login
         fetch('https://api.github.com/users/' + userName + '/repos')
           .then((res) => res.json())
           .then((result) => {
             console.log(result)
-            let nameList: string[] = []
+            const nameList: string[] = []
             for (const p in result) {
               nameList.push(result[p].name)
             }
-            onChangeGithubInfo({ githubID: res.providerData[0].uid, repos: nameList })
+            onChangeGithubInfo({
+              githubID: res.providerData[0].uid,
+              showRepo: true,
+              repos: nameList.map((item: string) => {
+                return { name: item, owner: true, selected: false }
+              }),
+              showCommits: false,
+              commits: [],
+            })
           })
       })
   }
-
+  const handleListCommits = useCallback((user: string, repo: string) => {
+    fetch(`https://api.github.com/repos/${user}/${repo}/commits`)
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          const extract = (item: { sha: any }) => {
+            return { commitID: item.sha }
+          }
+          const commits = commitsData.map((item: any) => {
+            return { commitID: item.sha }
+          })
+          if (githubInfo !== null) {
+            onChangeGithubInfo({
+              githubID: githubInfo.githubID,
+              showRepo: false,
+              repos: githubInfo.repos,
+              showCommits: true,
+              commits: commits,
+            })
+          }
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          console.log('retrieve commits failed')
+        }
+      )
+  }, [])
   const handleTypeInput = useCallback(
     (value: string) => {
       onUserInput(Field.INPUT, value)
@@ -417,24 +452,52 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
           />
 
           <AutoColumn gap={'md'}>
-            {repos.map((repo: string, i) => (
-              <GithubRepoPanel
-                key={i}
-                value={formattedAmounts[Field.OUTPUT]}
-                onUserInput={handleTypeOutput}
-                label={independentField === Field.INPUT && !showWrap ? 'To (at least)' : 'To'}
-                showMaxButton={false}
-                hideBalance={false}
-                fiatValue={fiatValueOutput ?? undefined}
-                priceImpact={priceImpact}
-                currency={currencies[Field.OUTPUT]}
-                onCurrencySelect={handleOutputSelect}
-                otherCurrency={currencies[Field.INPUT]}
-                showCommonBases={true}
-                githubID={repo}
-                id="swap-currency-output"
-              />
-            ))}
+            {githubInfo?.showRepo === true ? (
+              <>
+                {repos.map((repo: any, i) => (
+                  <GithubRepoPanel
+                    key={i}
+                    value={formattedAmounts[Field.OUTPUT]}
+                    onUserInput={handleTypeOutput}
+                    label={independentField === Field.INPUT && !showWrap ? 'To (at least)' : 'To'}
+                    showMaxButton={false}
+                    hideBalance={false}
+                    fiatValue={fiatValueOutput ?? undefined}
+                    priceImpact={priceImpact}
+                    currency={currencies[Field.OUTPUT]}
+                    onCurrencySelect={handleOutputSelect}
+                    otherCurrency={currencies[Field.INPUT]}
+                    showCommonBases={true}
+                    repoName={repo.name}
+                    listCommits={handleListCommits}
+                    id="swap-currency-output"
+                  />
+                ))}
+              </>
+            ) : null}
+            {githubInfo?.showCommits === true ? (
+              <>
+                {githubInfo.commits.map((commit: any, i) => (
+                  <GithubRepoPanel
+                    key={i}
+                    value={formattedAmounts[Field.OUTPUT]}
+                    onUserInput={handleTypeOutput}
+                    label={independentField === Field.INPUT && !showWrap ? 'To (at least)' : 'To'}
+                    showMaxButton={false}
+                    hideBalance={false}
+                    fiatValue={fiatValueOutput ?? undefined}
+                    priceImpact={priceImpact}
+                    currency={currencies[Field.OUTPUT]}
+                    onCurrencySelect={handleOutputSelect}
+                    otherCurrency={currencies[Field.INPUT]}
+                    showCommonBases={true}
+                    repoName={commit.commitID}
+                    listCommits={handleListCommits}
+                    id="swap-currency-output"
+                  />
+                ))}
+              </>
+            ) : null}
             {recipient !== null && !showWrap ? (
               <>
                 <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>

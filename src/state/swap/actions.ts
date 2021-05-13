@@ -7,7 +7,10 @@ export enum Field {
 
 export interface GithubInfo {
   githubID: string | null
-  repos: string[]
+  showRepo: boolean | null
+  repos: { name?: string; owner?: boolean; selected?: boolean }[]
+  showCommits: boolean | null
+  commits: { commitID?: string }[]
 }
 
 export const selectCurrency = createAction<{ field: Field; currencyId: string }>('swap/selectCurrency')

@@ -7,7 +7,7 @@ import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { ButtonGray } from '../Button'
+import { ButtonGray, ButtonLight } from '../Button'
 import { RowBetween, RowFixed } from '../Row'
 import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
@@ -147,6 +147,11 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   `};
 `
 
+export interface CommitsProps {
+  user: string
+  repo: string
+}
+
 interface GithubRepoPanelProps {
   value: string
   onUserInput: (value: string) => void
@@ -165,33 +170,8 @@ interface GithubRepoPanelProps {
   showCommonBases?: boolean
   customBalanceText?: string
   locked?: boolean
-  githubID?: undefined | string
-}
-
-interface CommitsProps {
-  user: string
-  repo: string
-}
-
-function Commits({ user, repo }: CommitsProps) {
-  fetch(`https://api.github.com/repos/${user}/${repo}/commits`)
-    .then((res) => res.text())
-    .then(
-      (result) => {
-        return (
-          <div>
-            <h1>Hello, world!</h1>
-            <h2>It is {result}.</h2>
-          </div>
-        )
-      },
-      // Note: it's important to handle errors here
-      // instead of a catch() block so that we don't swallow
-      // exceptions from actual bugs in components.
-      (error) => {
-        return <div></div>
-      }
-    )
+  repoName?: undefined | string
+  listCommits: (user: string, repo: string) => void
 }
 
 export default function GithubRepoPanel({
@@ -207,7 +187,8 @@ export default function GithubRepoPanel({
   customBalanceText,
   fiatValue,
   priceImpact,
-  githubID,
+  repoName,
+  listCommits,
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
@@ -237,52 +218,21 @@ export default function GithubRepoPanel({
           </AutoColumn>
         </FixedContainer>
       )}
-      <Container hideInput={hideInput}>
-        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
-          <CurrencySelect
-            selected={!!currency}
-            hideInput={hideInput}
-            className="open-currency-select-button"
-            onClick={() => {
-              if (onCurrencySelect) {
-                setModalOpen(false)
-              }
-            }}
-          >
-            <Aligner>
-              <RowFixed>
-                {pair ? (
-                  <span style={{ marginRight: '0.5rem' }}>
-                    <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
-                  </span>
-                ) : currency ? (
-                  <CurrencyLogo style={{ marginRight: '0.5rem' }} currency={currency} size={'24px'} />
-                ) : null}
-                {pair ? (
-                  <StyledTokenName className="pair-name-container">
-                    {pair?.token0.symbol}:{pair?.token1.symbol}
-                  </StyledTokenName>
-                ) : (
-                  <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
-                    {githubID}
-                  </StyledTokenName>
-                )}
-              </RowFixed>
-            </Aligner>
-          </CurrencySelect>
-          {!hideInput && (
-            <>
-              <NumericalInput
-                className="token-amount-input"
-                value={value}
-                placeholder={'Owner'}
-                onUserInput={(val) => {
-                  onUserInput(val)
-                }}
-              />
-            </>
-          )}
-        </InputRow>
+      <Container
+        hideInput={hideInput}
+        onSelect={() => {
+          hideInput = true
+        }}
+      >
+        <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
+          {repoName}
+        </StyledTokenName>
+        <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
+          Owner or Committer
+        </StyledTokenName>
+        <ButtonLight>Activate</ButtonLight>
+        <ButtonLight onClick={() => listCommits('ronhuafeng', 'my-blog')}>Forge</ButtonLight>
+        <ButtonLight>Divide</ButtonLight>
         {!hideInput && !hideBalance && (
           <FiatRow>
             <RowBetween>
