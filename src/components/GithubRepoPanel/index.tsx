@@ -170,8 +170,10 @@ interface GithubRepoPanelProps {
   showCommonBases?: boolean
   customBalanceText?: string
   locked?: boolean
-  repoName?: undefined | string
+  repoName: string
   listCommits: (user: string, repo: string) => void
+  setActivated: (repoName: string) => void
+  activated: boolean
 }
 
 export default function GithubRepoPanel({
@@ -188,6 +190,8 @@ export default function GithubRepoPanel({
   fiatValue,
   priceImpact,
   repoName,
+  setActivated,
+  activated,
   listCommits,
   hideBalance = false,
   pair = null, // used for double token logo
@@ -198,6 +202,12 @@ export default function GithubRepoPanel({
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
+
+  const [activate, setOn] = useState('activate')
+  const activateOn = () => setOn('activated')
+  const activeStr = 'activate'
+  const activedStr = 'activated'
+
   const { account } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
@@ -205,7 +215,6 @@ export default function GithubRepoPanel({
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
   }, [setModalOpen])
-
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
       {locked && (
@@ -230,8 +239,8 @@ export default function GithubRepoPanel({
         <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
           Owner or Committer
         </StyledTokenName>
-        <ButtonLight>Activate</ButtonLight>
-        <ButtonLight onClick={() => listCommits('ronhuafeng', 'my-blog')}>Forge</ButtonLight>
+        <ButtonLight onClick={() => setActivated(repoName)}>{activated ? 'activated' : 'activate'}</ButtonLight>
+        <ButtonLight onClick={() => setModalOpen(true)}>Forge</ButtonLight>
         <ButtonLight>Divide</ButtonLight>
         {!hideInput && !hideBalance && (
           <FiatRow>

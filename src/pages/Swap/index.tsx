@@ -64,6 +64,7 @@ import { commitsData } from './commits'
 
 import ReactDOM from 'react-dom'
 import GithubRepoPanel from '../../components/GithubRepoPanel'
+import { MenuItem } from 'components/SearchModal/styleds'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -192,7 +193,7 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
               githubID: res.providerData[0].uid,
               showRepo: true,
               repos: nameList.map((item: string) => {
-                return { name: item, owner: true, selected: false }
+                return { name: item, owner: true, selected: false, activated: false }
               }),
               showCommits: false,
               commits: [],
@@ -229,6 +230,27 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
         }
       )
   }, [])
+
+  const handleActivated = useCallback((repoName: string) => {
+    if (githubInfo !== null) {
+      let _repos = githubInfo.repos.map((repo: any) => {
+        if (repo.name === repoName) {
+          return { name: repo.name, owner: repo.owner, selected: repo.selected, activated: true }
+        } else {
+          return { name: repo.name, owner: repo.owner, selected: repo.selected, activated: false }
+        }
+      })
+      onChangeGithubInfo({
+        githubID: githubInfo.githubID,
+        showRepo: true,
+        repos: _repos,
+        showCommits: false,
+        commits: [],
+      })
+      console.log('test', _repos)
+    }
+  }, [])
+
   const handleTypeInput = useCallback(
     (value: string) => {
       onUserInput(Field.INPUT, value)
@@ -471,6 +493,8 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
                     repoName={repo.name}
                     listCommits={handleListCommits}
                     id="swap-currency-output"
+                    setActivated={handleActivated}
+                    activated={repo.activated}
                   />
                 ))}
               </>
@@ -494,6 +518,8 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
                     repoName={commit.commitID}
                     listCommits={handleListCommits}
                     id="swap-currency-output"
+                    setActivated={handleActivated}
+                    activated={commit.activated}
                   />
                 ))}
               </>

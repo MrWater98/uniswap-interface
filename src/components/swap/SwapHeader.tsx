@@ -21,15 +21,6 @@ export default function SwapHeader() {
           <TYPE.black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
             Repo
           </TYPE.black>
-          <BottomGrouping>
-            <ButtonBlue>Button1</ButtonBlue>
-          </BottomGrouping>
-          <BottomGrouping>
-            <ButtonGray>Button2</ButtonGray>
-          </BottomGrouping>
-          <BottomGrouping>
-            <ButtonLight>Button3</ButtonLight>
-          </BottomGrouping>
         </RowFixed>
         <RowFixed>
           {/* <TradeInfo disabled={!trade} trade={trade} /> */}
