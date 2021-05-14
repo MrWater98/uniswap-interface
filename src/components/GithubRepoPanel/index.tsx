@@ -18,6 +18,7 @@ import useTheme from '../../hooks/useTheme'
 import { Lock } from 'react-feather'
 import { AutoColumn } from 'components/Column'
 import { FiatValue } from './FiatValue'
+import { GithubInfo } from 'state/swap/actions'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -172,9 +173,9 @@ interface GithubRepoPanelProps {
   locked?: boolean
   repoName: string
   listCommits: (user: string, repo: string) => void
-  setActivated: (repoName: string) => void
+  setActivated: (repoName: string, githubInfo: GithubInfo) => void
   activated: boolean
-  githubID: string | null
+  githubInfo: GithubInfo
 }
 
 export default function GithubRepoPanel({
@@ -194,12 +195,11 @@ export default function GithubRepoPanel({
   setActivated,
   activated,
   listCommits,
-  githubID,
+  githubInfo,
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
   locked = false,
-
   ...rest
 }: GithubRepoPanelProps) {
   const { t } = useTranslation()
@@ -242,7 +242,9 @@ export default function GithubRepoPanel({
         <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
           Owner or Committer
         </StyledTokenName>
-        <ButtonLight onClick={() => setActivated(repoName)}>{activated ? 'activated' : 'activate'}</ButtonLight>
+        <ButtonLight onClick={() => setActivated(repoName, githubInfo)}>
+          {activated ? 'activated' : 'activate'}
+        </ButtonLight>
         <ButtonLight onClick={() => setModalOpen(true)}>Forge</ButtonLight>
         <ButtonLight>Divide</ButtonLight>
         {!hideInput && !hideBalance && (
@@ -285,8 +287,6 @@ export default function GithubRepoPanel({
           selectedCurrency={currency}
           otherSelectedCurrency={otherCurrency}
           showCommonBases={showCommonBases}
-          githubID={githubID}
-          repoName={repoName}
         />
       )}
     </InputPanel>

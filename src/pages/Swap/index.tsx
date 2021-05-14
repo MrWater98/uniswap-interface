@@ -176,6 +176,7 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
 
   const handleOnClick = async (provider: firebase.auth.AuthProvider) => {
     const res = await socialMediaAuth(provider)
+    console.log(res.providerData[0].uid)
     fetch('https://api.github.com/user/' + res.providerData[0].uid)
       .then((res) => res.json())
       .then((result) => {
@@ -230,13 +231,14 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
       )
   }, [])
 
-  const handleActivated = useCallback((repoName: string) => {
+  const handleActivated = useCallback((repoName: string, githubInfo: GithubInfo) => {
+    console.log(githubInfo)
     if (githubInfo !== null) {
       let _repos = githubInfo.repos.map((repo: any) => {
         if (repo.name === repoName) {
           return { name: repo.name, owner: repo.owner, selected: repo.selected, activated: true }
         } else {
-          return { name: repo.name, owner: repo.owner, selected: repo.selected, activated: false }
+          return { name: repo.name, owner: repo.owner, selected: repo.selected, activated: repo.activated }
         }
       })
       onChangeGithubInfo({
@@ -488,13 +490,39 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
                     currency={currencies[Field.OUTPUT]}
                     onCurrencySelect={handleOutputSelect}
                     otherCurrency={currencies[Field.INPUT]}
-                    showCommonBases={false}
+                    showCommonBases={true}
                     repoName={repo.name}
                     listCommits={handleListCommits}
                     id="swap-currency-output"
                     setActivated={handleActivated}
                     activated={repo.activated}
-                    githubID={githubInfo.githubID}
+                    githubInfo={githubInfo}
+                  />
+                ))}
+              </>
+            ) : null}
+            {githubInfo?.showCommits === true ? (
+              <>
+                {githubInfo.commits.map((commit: any, i) => (
+                  <GithubRepoPanel
+                    key={i}
+                    value={formattedAmounts[Field.OUTPUT]}
+                    onUserInput={handleTypeOutput}
+                    label={independentField === Field.INPUT && !showWrap ? 'To (at least)' : 'To'}
+                    showMaxButton={false}
+                    hideBalance={false}
+                    fiatValue={fiatValueOutput ?? undefined}
+                    priceImpact={priceImpact}
+                    currency={currencies[Field.OUTPUT]}
+                    onCurrencySelect={handleOutputSelect}
+                    otherCurrency={currencies[Field.INPUT]}
+                    showCommonBases={true}
+                    repoName={commit.commitID}
+                    listCommits={handleListCommits}
+                    id="swap-currency-output"
+                    setActivated={handleActivated}
+                    activated={commit.activated}
+                    githubInfo={githubInfo}
                   />
                 ))}
               </>
