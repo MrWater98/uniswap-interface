@@ -47,12 +47,16 @@ export default function Manage({
   setImportList,
   setImportToken,
   setListUrl,
+  githubID,
+  repoName,
 }: {
   onDismiss: () => void
   setModalView: (view: CurrencyModalView) => void
   setImportToken: (token: Token) => void
   setImportList: (list: TokenList) => void
   setListUrl: (url: string) => void
+  githubID?: string | null
+  repoName?: string | null
 }) {
   // toggle between tokens and lists
   const [showLists, setShowLists] = useState(true)
@@ -69,18 +73,15 @@ export default function Manage({
         </RowBetween>
       </PaddedColumn>
       <Separator />
-      <PaddedColumn style={{ paddingBottom: 0 }}>
-        <ToggleWrapper>
-          <ToggleOption onClick={() => setShowLists(!showLists)} active={showLists}>
-            Lists
-          </ToggleOption>
-          <ToggleOption onClick={() => setShowLists(!showLists)} active={!showLists}>
-            Tokens
-          </ToggleOption>
-        </ToggleWrapper>
-      </PaddedColumn>
+      <PaddedColumn style={{ paddingBottom: 0 }}></PaddedColumn>
       {showLists ? (
-        <ManageLists setModalView={setModalView} setImportList={setImportList} setListUrl={setListUrl} />
+        <ManageLists
+          setModalView={setModalView}
+          setImportList={setImportList}
+          setListUrl={setListUrl}
+          githubID={githubID}
+          repoName={repoName}
+        />
       ) : (
         <ManageTokens setModalView={setModalView} setImportToken={setImportToken} />
       )}

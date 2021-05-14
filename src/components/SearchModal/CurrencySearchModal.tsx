@@ -16,6 +16,8 @@ interface CurrencySearchModalProps {
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
+  githubID?: string | null
+  repoName?: string | null
 }
 
 export enum CurrencyModalView {
@@ -32,13 +34,15 @@ export default function CurrencySearchModal({
   selectedCurrency,
   otherSelectedCurrency,
   showCommonBases = false,
+  githubID,
+  repoName,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.manage)
   const lastOpen = useLast(isOpen)
 
   useEffect(() => {
     if (isOpen && !lastOpen) {
-      setModalView(CurrencyModalView.search)
+      setModalView(CurrencyModalView.manage)
     }
   }, [isOpen, lastOpen])
 
@@ -95,6 +99,8 @@ export default function CurrencySearchModal({
           setImportToken={setImportToken}
           setImportList={setImportList}
           setListUrl={setListUrl}
+          githubID={githubID}
+          repoName={repoName}
         />
       ) : (
         ''

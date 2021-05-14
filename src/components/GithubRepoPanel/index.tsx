@@ -174,6 +174,7 @@ interface GithubRepoPanelProps {
   listCommits: (user: string, repo: string) => void
   setActivated: (repoName: string) => void
   activated: boolean
+  githubID: string | null
 }
 
 export default function GithubRepoPanel({
@@ -193,10 +194,12 @@ export default function GithubRepoPanel({
   setActivated,
   activated,
   listCommits,
+  githubID,
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
   locked = false,
+
   ...rest
 }: GithubRepoPanelProps) {
   const { t } = useTranslation()
@@ -282,6 +285,8 @@ export default function GithubRepoPanel({
           selectedCurrency={currency}
           otherSelectedCurrency={otherCurrency}
           showCommonBases={showCommonBases}
+          githubID={githubID}
+          repoName={repoName}
         />
       )}
     </InputPanel>
