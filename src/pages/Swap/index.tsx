@@ -65,6 +65,7 @@ import { commitsData } from './commits'
 import ReactDOM from 'react-dom'
 import GithubRepoPanel from '../../components/GithubRepoPanel'
 import { MenuItem } from 'components/SearchModal/styleds'
+import { Contract } from '@ethersproject/contracts'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -234,14 +235,20 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
     console.log(githubInfo)
   }, [])
 
-  const handleActivated = useCallback((repoName: string, githubInfo: GithubInfo) => {
+  const handleActivated = useCallback((repoName: string, contract: Contract, githubInfo: GithubInfo) => {
     console.log(githubInfo)
     if (githubInfo !== null) {
       let _repos = githubInfo.repos.map((repo: any) => {
         if (repo.name === repoName) {
-          return { name: repo.name, owner: repo.owner, selected: repo.selected, activated: true }
+          return { name: repo.name, owner: repo.owner, selected: repo.selected, activated: true, contract: contract }
         } else {
-          return { name: repo.name, owner: repo.owner, selected: repo.selected, activated: repo.activated }
+          return {
+            name: repo.name,
+            owner: repo.owner,
+            selected: repo.selected,
+            activated: repo.activated,
+            contract: repo.contract,
+          }
         }
       })
       onChangeGithubInfo({

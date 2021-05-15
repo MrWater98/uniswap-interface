@@ -4,8 +4,6 @@ import CommittableRegistry from '../../abis/CommittableRegistry.json'
 import { Interface } from '@ethersproject/abi'
 import { calculateGasMargin, getContract } from '../../utils'
 import { TransactionResponse, Web3Provider } from '@ethersproject/providers'
-import { useActiveWeb3React } from '../../hooks'
-import { ChainId } from '@uniswap/sdk-core'
 
 export function CreateCommittableContract(
   account: string | null | undefined,
@@ -17,10 +15,7 @@ export function CreateCommittableContract(
   }
 
   const contractFactory = ContractFactory.fromSolidity(CommittableRegistry, library.getSigner())
-  contractFactory.deploy().then((contract) => {
-    console.log('success contract:', contract.address)
-    CallCommittableActivateCommittable1(account, library, contract, 'uri', 'name', 'symbol')
-  })
+  return contractFactory.deploy()
 }
 
 export function CallCommittableActivateCommittable1(

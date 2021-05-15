@@ -19,7 +19,8 @@ import { Lock } from 'react-feather'
 import { AutoColumn } from 'components/Column'
 import { FiatValue } from './FiatValue'
 import { GithubInfo } from 'state/swap/actions'
-import { CreateCommittableContract } from './handlers'
+import { CallCommittableActivateCommittable1, CreateCommittableContract } from './handlers'
+import { Contract } from '@ethersproject/contracts'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -174,7 +175,7 @@ interface GithubRepoPanelProps {
   locked?: boolean
   repoName: string
   listCommits: (user: string, repo: string, githubInfo: GithubInfo) => void
-  setActivated: (repoName: string, githubInfo: GithubInfo) => void
+  setActivated: (repoName: string, contract: Contract, githubInfo: GithubInfo) => void
   activated: boolean
   githubInfo: GithubInfo
 }
@@ -223,8 +224,21 @@ export default function GithubRepoPanel({
   }, [setModalOpen])
 
   const handleContractCreate = useCallback(
-    (repoName: string) => {
-      CreateCommittableContract(account, library, repoName)
+    (repoName: string, githubInfo: GithubInfo) => {
+      const contractPromise = CreateCommittableContract(account, library, repoName)
+      if (contractPromise) {
+        contractPromise
+          .then((contract) => {
+            console.log('success contract:', contract.address)
+            setActivated(repoName, contract, githubInfo)
+
+            CallCommittableActivateCommittable1(account, library, contract, 'uri', 'name', 'symbol')
+          })
+          .catch((error) => {
+            console.log('deploy contract failed, ', error)
+            return null
+          })
+      }
     },
     [CreateCommittableContract, account, library]
   )
@@ -253,7 +267,11 @@ export default function GithubRepoPanel({
         <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
           Owner or Committer
         </StyledTokenName>
-        <ButtonLight onClick={() => setActivated(repoName, githubInfo)}>
+        <ButtonLight
+          onClick={() => {
+            if (!activated) handleContractCreate(repoName, githubInfo)
+          }}
+        >
           {activated ? 'activated' : 'activate'}
         </ButtonLight>
         <ButtonLight
@@ -264,7 +282,7 @@ export default function GithubRepoPanel({
         >
           Forge
         </ButtonLight>
-        <ButtonLight onClick={() => handleContractCreate(repoName)}>Divide</ButtonLight>
+        <ButtonLight>Divide</ButtonLight>
         {!hideInput && !hideBalance && (
           <FiatRow>
             <RowBetween>
