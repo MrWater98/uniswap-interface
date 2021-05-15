@@ -100,7 +100,95 @@ const RowWrapper = styled(Row)<{ bgColor: string; active: boolean }>`
 function listUrlRowHTMLId(listUrl: string) {
   return `list-row-${listUrl.replace(/\./g, '-')}`
 }
+const CommitRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
+  const dispatch = useDispatch<AppDispatch>()
 
+  const isActive = useIsListActive(listUrl)
+
+  const [open, toggle] = useToggle(false)
+  const node = useRef<HTMLDivElement>()
+  const [referenceElement, setReferenceElement] = useState<HTMLDivElement>()
+  const [popperElement, setPopperElement] = useState<HTMLDivElement>()
+
+  const { styles, attributes } = usePopper(referenceElement, popperElement, {
+    placement: 'auto',
+    strategy: 'fixed',
+    modifiers: [{ name: 'offset', options: { offset: [8, 8] } }],
+  })
+
+  const handleEnableList = useCallback(() => {
+    ReactGA.event({
+      category: 'Lists',
+      action: 'Enable List',
+      label: listUrl,
+    })
+    dispatch(enableList(listUrl))
+  }, [dispatch, listUrl])
+
+  const handleDisableList = useCallback(() => {
+    ReactGA.event({
+      category: 'Lists',
+      action: 'Disable List',
+      label: listUrl,
+    })
+    dispatch(disableList(listUrl))
+  }, [dispatch, listUrl])
+
+  const handleRemoveList = useCallback(() => {
+    ReactGA.event({
+      category: 'Lists',
+      action: 'Start Remove List',
+      label: listUrl,
+    })
+    if (window.prompt(`Please confirm you would like to remove this list by typing REMOVE`) === `REMOVE`) {
+      ReactGA.event({
+        category: 'Lists',
+        action: 'Confirm Remove List',
+        label: listUrl,
+      })
+      dispatch(removeList(listUrl))
+    }
+  }, [dispatch, listUrl])
+
+  useOnClickOutside(node, open ? toggle : undefined)
+
+  const theme = useTheme()
+
+  return (
+    <RowWrapper active={isActive} bgColor={'#2172E5'} key={'tokenlist.aave.eth'} id={'list-row-tokenlist-aave-eth'}>
+      {false ? (
+        <ListLogo
+          size="40px"
+          style={{ marginRight: '1rem' }}
+          logoURI={'ipfs://QmWzL3TSmkMhbqGBEwyeFyWVvLmEo3F44HBMFnmTUiTfp1'}
+          alt={'list logo'}
+        />
+      ) : (
+        <div style={{ width: '24px', height: '24px', marginRight: '1rem' }} />
+      )}
+      <Column style={{ flex: '1' }}>
+        <Row>
+          <StyledTitleText active={false}>{'0x' + listUrl.substr(0, 6) + '...'}</StyledTitleText>
+        </Row>
+        <RowFixed mt="4px">
+          <StyledListUrlText active={false} mr="6px">
+            15 token
+          </StyledListUrlText>
+          <StyledMenu ref={node as any}>
+            <ButtonEmpty onClick={toggle} ref={setReferenceElement} padding="0"></ButtonEmpty>
+          </StyledMenu>
+        </RowFixed>
+      </Column>
+      <ListToggle
+        isActive={isActive}
+        bgColor={'#2172E5'}
+        toggle={() => {
+          isActive ? handleDisableList() : handleEnableList()
+        }}
+      />
+    </RowWrapper>
+  )
+})
 const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
   const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>((state) => state.lists.byUrl)
   const dispatch = useDispatch<AppDispatch>()
@@ -216,9 +304,6 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
   )
 })
 
-function CommitRow(props: any) {
-  return <h1>{props.key}</h1>
-}
 const ListContainer = styled.div`
   padding: 1rem;
   height: 100%;
@@ -380,11 +465,8 @@ export function ManageLists({
       <Separator />
       <ListContainer>
         <AutoColumn gap="md">
-          {sortedLists.map((listUrl) => (
-            <ListRow key={listUrl} listUrl={listUrl} />
-          ))}
-          {githubInfo?.commits.map((commit: any) => (
-            <CommitRow key={commit}></CommitRow>
+          {githubInfo?.commits.map((listUrl) => (
+            <CommitRow key={listUrl.commitID as string} listUrl={listUrl.commitID as string} />
           ))}
         </AutoColumn>
       </ListContainer>
