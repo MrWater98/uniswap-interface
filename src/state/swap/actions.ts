@@ -11,7 +11,7 @@ export interface GithubInfo {
   showRepo: boolean | null
   repos: { name?: string; owner?: boolean; selected?: boolean; activated?: boolean; contract?: string }[]
   showCommits: boolean | null
-  commits: { commitID?: string }[]
+  commits: { commitID?: string; commitName?: string; commitDate?: string }[]
   user: string
 }
 

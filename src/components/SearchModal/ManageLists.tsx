@@ -189,7 +189,7 @@ const CommitRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
     </RowWrapper>
   )
 })
-const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
+const ListRow = memo(function ListRow({ listUrl }: { listUrl: string; listUrlName: string; listUrlDate: string }) {
   const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>((state) => state.lists.byUrl)
   const dispatch = useDispatch<AppDispatch>()
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]

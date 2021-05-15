@@ -208,9 +208,9 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
       .then((res) => res.json())
       .then(
         (result) => {
-          const extract = (item: { sha: any }) => {
-            return { commitID: item.sha }
-          }
+          const extract = result.map((item: any) => {
+            return { commitID: item.sha, commitName: item.commit.author.name, commitDate: item.commit.author.date }
+          })
           const commits = commitsData.map((item: any) => {
             return { commitID: item.sha }
           })
@@ -220,7 +220,7 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
               showRepo: true,
               repos: githubInfo.repos,
               showCommits: false,
-              commits: commits,
+              commits: extract,
               user: githubInfo.user,
             })
           }
