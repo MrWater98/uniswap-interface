@@ -9618,69 +9618,27 @@
   "ast": {
     "absolutePath": "/Users/Charles/Workspace/Projects/Ethereum/committable/contracts/CommittableRegistry.sol",
     "exportedSymbols": {
-      "AccessControl": [
-        1063
-      ],
-      "AccessControlEnumerable": [
-        1253
-      ],
-      "Address": [
-        3155
-      ],
-      "Committable": [
-        405
-      ],
-      "CommittableRegistry": [
-        695
-      ],
-      "Context": [
-        3178
-      ],
-      "ERC165": [
-        3405
-      ],
-      "ERC721": [
-        2181
-      ],
-      "ERC721Enumerable": [
-        2653
-      ],
-      "ERC721URIStorage": [
-        2781
-      ],
-      "EnumerableSet": [
-        3930
-      ],
-      "IAccessControl": [
-        739
-      ],
-      "IAccessControlEnumerable": [
-        1085
-      ],
-      "IERC165": [
-        3417
-      ],
-      "IERC721": [
-        2297
-      ],
-      "IERC721Enumerable": [
-        2812
-      ],
-      "IERC721Metadata": [
-        2839
-      ],
-      "IERC721Receiver": [
-        2315
-      ],
-      "IERC777Recipient": [
-        2859
-      ],
-      "Ownable": [
-        1363
-      ],
-      "Strings": [
-        3381
-      ]
+      "AccessControl": [1063],
+      "AccessControlEnumerable": [1253],
+      "Address": [3155],
+      "Committable": [405],
+      "CommittableRegistry": [695],
+      "Context": [3178],
+      "ERC165": [3405],
+      "ERC721": [2181],
+      "ERC721Enumerable": [2653],
+      "ERC721URIStorage": [2781],
+      "EnumerableSet": [3930],
+      "IAccessControl": [739],
+      "IAccessControlEnumerable": [1085],
+      "IERC165": [3417],
+      "IERC721": [2297],
+      "IERC721Enumerable": [2812],
+      "IERC721Metadata": [2839],
+      "IERC721Receiver": [2315],
+      "IERC777Recipient": [2859],
+      "Ownable": [1363],
+      "Strings": [3381]
     },
     "id": 696,
     "license": "MIT",
@@ -9688,12 +9646,7 @@
     "nodes": [
       {
         "id": 407,
-        "literals": [
-          "solidity",
-          "^",
-          "0.8",
-          ".0"
-        ],
+        "literals": ["solidity", "^", "0.8", ".0"],
         "nodeType": "PragmaDirective",
         "src": "33:23:1"
       },
@@ -9761,23 +9714,11 @@
             "src": "250:23:1"
           }
         ],
-        "contractDependencies": [
-          405
-        ],
+        "contractDependencies": [405],
         "contractKind": "contract",
         "fullyImplemented": true,
         "id": 695,
-        "linearizedBaseContracts": [
-          695,
-          1253,
-          1063,
-          3405,
-          3417,
-          739,
-          1363,
-          3178,
-          1085
-        ],
+        "linearizedBaseContracts": [695, 1253, 1063, 3405, 3417, 739, 1363, 3178, 1085],
         "name": "CommittableRegistry",
         "nameLocation": "218:19:1",
         "nodeType": "ContractDefinition",
@@ -10366,9 +10307,7 @@
                       "id": 459,
                       "name": "_setupRole",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        1252
-                      ],
+                      "overloadedDeclarations": [1252],
                       "referencedDeclaration": 1252,
                       "src": "1269:10:1",
                       "typeDescriptions": {
@@ -10935,10 +10874,7 @@
                       "id": 490,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        4294967278,
-                        4294967278
-                      ],
+                      "overloadedDeclarations": [4294967278, 4294967278],
                       "referencedDeclaration": 4294967278,
                       "src": "1680:7:1",
                       "typeDescriptions": {
@@ -11084,10 +11020,7 @@
                       "id": 524,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        4294967278,
-                        4294967278
-                      ],
+                      "overloadedDeclarations": [4294967278, 4294967278],
                       "referencedDeclaration": 4294967278,
                       "src": "2299:7:1",
                       "typeDescriptions": {
@@ -11115,9 +11048,7 @@
                   "src": "2299:83:1"
                 },
                 {
-                  "assignments": [
-                    534
-                  ],
+                  "assignments": [534],
                   "declarations": [
                     {
                       "constant": false,
@@ -11989,10 +11920,7 @@
                       "id": 573,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        4294967278,
-                        4294967278
-                      ],
+                      "overloadedDeclarations": [4294967278, 4294967278],
                       "referencedDeclaration": 4294967278,
                       "src": "2738:7:1",
                       "typeDescriptions": {
@@ -12123,10 +12051,7 @@
                       "id": 608,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        4294967278,
-                        4294967278
-                      ],
+                      "overloadedDeclarations": [4294967278, 4294967278],
                       "referencedDeclaration": 4294967278,
                       "src": "3175:7:1",
                       "typeDescriptions": {
@@ -12154,9 +12079,7 @@
                   "src": "3175:83:1"
                 },
                 {
-                  "assignments": [
-                    617
-                  ],
+                  "assignments": [617],
                   "declarations": [
                     {
                       "constant": false,
@@ -12235,9 +12158,7 @@
                   "src": "3269:47:1"
                 },
                 {
-                  "assignments": [
-                    623
-                  ],
+                  "assignments": [623],
                   "declarations": [
                     {
                       "constant": false,
@@ -12929,10 +12850,7 @@
                       "id": 644,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        4294967278,
-                        4294967278
-                      ],
+                      "overloadedDeclarations": [4294967278, 4294967278],
                       "referencedDeclaration": 4294967278,
                       "src": "3553:7:1",
                       "typeDescriptions": {
@@ -13063,10 +12981,7 @@
                       "id": 673,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        4294967278,
-                        4294967278
-                      ],
+                      "overloadedDeclarations": [4294967278, 4294967278],
                       "referencedDeclaration": 4294967278,
                       "src": "3876:7:1",
                       "typeDescriptions": {
@@ -13094,9 +13009,7 @@
                   "src": "3876:83:1"
                 },
                 {
-                  "assignments": [
-                    682
-                  ],
+                  "assignments": [682],
                   "declarations": [
                     {
                       "constant": false,
@@ -13356,69 +13269,27 @@
   "legacyAST": {
     "absolutePath": "/Users/Charles/Workspace/Projects/Ethereum/committable/contracts/CommittableRegistry.sol",
     "exportedSymbols": {
-      "AccessControl": [
-        1063
-      ],
-      "AccessControlEnumerable": [
-        1253
-      ],
-      "Address": [
-        3155
-      ],
-      "Committable": [
-        405
-      ],
-      "CommittableRegistry": [
-        695
-      ],
-      "Context": [
-        3178
-      ],
-      "ERC165": [
-        3405
-      ],
-      "ERC721": [
-        2181
-      ],
-      "ERC721Enumerable": [
-        2653
-      ],
-      "ERC721URIStorage": [
-        2781
-      ],
-      "EnumerableSet": [
-        3930
-      ],
-      "IAccessControl": [
-        739
-      ],
-      "IAccessControlEnumerable": [
-        1085
-      ],
-      "IERC165": [
-        3417
-      ],
-      "IERC721": [
-        2297
-      ],
-      "IERC721Enumerable": [
-        2812
-      ],
-      "IERC721Metadata": [
-        2839
-      ],
-      "IERC721Receiver": [
-        2315
-      ],
-      "IERC777Recipient": [
-        2859
-      ],
-      "Ownable": [
-        1363
-      ],
-      "Strings": [
-        3381
-      ]
+      "AccessControl": [1063],
+      "AccessControlEnumerable": [1253],
+      "Address": [3155],
+      "Committable": [405],
+      "CommittableRegistry": [695],
+      "Context": [3178],
+      "ERC165": [3405],
+      "ERC721": [2181],
+      "ERC721Enumerable": [2653],
+      "ERC721URIStorage": [2781],
+      "EnumerableSet": [3930],
+      "IAccessControl": [739],
+      "IAccessControlEnumerable": [1085],
+      "IERC165": [3417],
+      "IERC721": [2297],
+      "IERC721Enumerable": [2812],
+      "IERC721Metadata": [2839],
+      "IERC721Receiver": [2315],
+      "IERC777Recipient": [2859],
+      "Ownable": [1363],
+      "Strings": [3381]
     },
     "id": 696,
     "license": "MIT",
@@ -13426,12 +13297,7 @@
     "nodes": [
       {
         "id": 407,
-        "literals": [
-          "solidity",
-          "^",
-          "0.8",
-          ".0"
-        ],
+        "literals": ["solidity", "^", "0.8", ".0"],
         "nodeType": "PragmaDirective",
         "src": "33:23:1"
       },
@@ -13499,23 +13365,11 @@
             "src": "250:23:1"
           }
         ],
-        "contractDependencies": [
-          405
-        ],
+        "contractDependencies": [405],
         "contractKind": "contract",
         "fullyImplemented": true,
         "id": 695,
-        "linearizedBaseContracts": [
-          695,
-          1253,
-          1063,
-          3405,
-          3417,
-          739,
-          1363,
-          3178,
-          1085
-        ],
+        "linearizedBaseContracts": [695, 1253, 1063, 3405, 3417, 739, 1363, 3178, 1085],
         "name": "CommittableRegistry",
         "nameLocation": "218:19:1",
         "nodeType": "ContractDefinition",
@@ -14104,9 +13958,7 @@
                       "id": 459,
                       "name": "_setupRole",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        1252
-                      ],
+                      "overloadedDeclarations": [1252],
                       "referencedDeclaration": 1252,
                       "src": "1269:10:1",
                       "typeDescriptions": {
@@ -14673,10 +14525,7 @@
                       "id": 490,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        4294967278,
-                        4294967278
-                      ],
+                      "overloadedDeclarations": [4294967278, 4294967278],
                       "referencedDeclaration": 4294967278,
                       "src": "1680:7:1",
                       "typeDescriptions": {
@@ -14822,10 +14671,7 @@
                       "id": 524,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        4294967278,
-                        4294967278
-                      ],
+                      "overloadedDeclarations": [4294967278, 4294967278],
                       "referencedDeclaration": 4294967278,
                       "src": "2299:7:1",
                       "typeDescriptions": {
@@ -14853,9 +14699,7 @@
                   "src": "2299:83:1"
                 },
                 {
-                  "assignments": [
-                    534
-                  ],
+                  "assignments": [534],
                   "declarations": [
                     {
                       "constant": false,
@@ -15727,10 +15571,7 @@
                       "id": 573,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        4294967278,
-                        4294967278
-                      ],
+                      "overloadedDeclarations": [4294967278, 4294967278],
                       "referencedDeclaration": 4294967278,
                       "src": "2738:7:1",
                       "typeDescriptions": {
@@ -15861,10 +15702,7 @@
                       "id": 608,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        4294967278,
-                        4294967278
-                      ],
+                      "overloadedDeclarations": [4294967278, 4294967278],
                       "referencedDeclaration": 4294967278,
                       "src": "3175:7:1",
                       "typeDescriptions": {
@@ -15892,9 +15730,7 @@
                   "src": "3175:83:1"
                 },
                 {
-                  "assignments": [
-                    617
-                  ],
+                  "assignments": [617],
                   "declarations": [
                     {
                       "constant": false,
@@ -15973,9 +15809,7 @@
                   "src": "3269:47:1"
                 },
                 {
-                  "assignments": [
-                    623
-                  ],
+                  "assignments": [623],
                   "declarations": [
                     {
                       "constant": false,
@@ -16667,10 +16501,7 @@
                       "id": 644,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        4294967278,
-                        4294967278
-                      ],
+                      "overloadedDeclarations": [4294967278, 4294967278],
                       "referencedDeclaration": 4294967278,
                       "src": "3553:7:1",
                       "typeDescriptions": {
@@ -16801,10 +16632,7 @@
                       "id": 673,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        4294967278,
-                        4294967278
-                      ],
+                      "overloadedDeclarations": [4294967278, 4294967278],
                       "referencedDeclaration": 4294967278,
                       "src": "3876:7:1",
                       "typeDescriptions": {
@@ -16832,9 +16660,7 @@
                   "src": "3876:83:1"
                 },
                 {
-                  "assignments": [
-                    682
-                  ],
+                  "assignments": [682],
                   "declarations": [
                     {
                       "constant": false,
