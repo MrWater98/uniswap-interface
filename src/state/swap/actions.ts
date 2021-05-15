@@ -8,7 +8,14 @@ export enum Field {
 export interface GithubInfo {
   githubID: string | null
   showRepo: boolean | null
-  repos: { name?: string; owner?: boolean; selected?: boolean; activated?: boolean; contract?: string }[]
+  repos: {
+    name?: string
+    owner?: boolean
+    selected?: boolean
+    activated?: boolean
+    contract?: string
+    dividend?: string
+  }[]
   showCommits: boolean | null
   commits: { commitID?: string; commitName?: string; commitDate?: string; repo: string }[]
   user: string

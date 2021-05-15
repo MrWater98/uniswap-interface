@@ -21,6 +21,7 @@ import { FiatValue } from './FiatValue'
 import { GithubInfo } from 'state/swap/actions'
 import {
   CallCommittableActivateCommittable1,
+  CallCommittableGrantDividend,
   CallCommittableMintCommittable,
   CreateCommittableContract,
 } from './handlers'
@@ -265,6 +266,24 @@ export default function GithubRepoPanel({
     [CreateCommittableContract, account, library]
   )
 
+  const handleDividend = useCallback(
+    (dividend: string) => {
+      console.log('dividend for ', repoName, ' with value: ', dividend)
+      if (!githubInfo) return
+      githubInfo.repos.map((repo) => {
+        if (repo.name === repoName) {
+          if (!repo.contract) {
+            console.log(repo.name, ' should be activated first.')
+            return
+          }
+          const numberDividend = +dividend
+          CallCommittableGrantDividend(account, library, repo.contract, repoName, numberDividend)
+        }
+      })
+    },
+    [CallCommittableGrantDividend, repoName]
+  )
+
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
       {locked && (
@@ -395,6 +414,7 @@ export default function GithubRepoPanel({
           otherSelectedCurrency={otherCurrency}
           showCommonBases={showCommonBases}
           isManage={isManage}
+          handleDividend={handleDividend}
         />
       )}
     </InputPanel>

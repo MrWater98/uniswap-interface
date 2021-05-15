@@ -128,6 +128,7 @@ export function CurrencySearch({
   const inputRef = useRef<HTMLInputElement>()
   const handleInput = useCallback((event) => {
     const input = event.target.value
+    console.log('input changed to: ', input)
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input)
     fixedList.current?.scrollTo(0)
@@ -173,8 +174,8 @@ export function CurrencySearch({
         <Row>
           <SearchInput
             type="text"
-            id="token-search-input"
-            placeholder={t('tokenSearchPlaceholder')}
+            id="token-search-input-xxxxx"
+            placeholder={'0'}
             autoComplete="off"
             value={searchQuery}
             ref={inputRef as RefObject<HTMLInputElement>}

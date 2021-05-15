@@ -110,6 +110,56 @@ export function CallCommittableMintCommittable(
     })
 }
 
+// * grantDividend(
+//   string memory repoURI,
+//   uint256 amount
+// )
+
+export function CallCommittableGrantDividend(
+  account: string | null | undefined,
+  library: Web3Provider | undefined,
+  contractAddress: string,
+  repoURI: string,
+  amount: number
+) {
+  if (!library || !account) {
+    return
+  }
+
+  const iface = new Interface(CommittableRegistry.abi)
+  console.log('grantDividend', [repoURI, amount])
+  const data = iface.encodeFunctionData('grantDividend', [repoURI, amount])
+
+  const txn = {
+    from: account,
+    to: contractAddress,
+    data: data,
+  }
+  library
+    .getSigner()
+    .estimateGas(txn)
+    .then((estimate) => {
+      const newTxn = {
+        ...txn,
+        gasLimit: calculateGasMargin(estimate),
+      }
+
+      return library
+        .getSigner()
+        .sendTransaction(newTxn)
+        .then((response: TransactionResponse) => {
+          console.log('success call with txn for grantDividend for repo: ', repoURI)
+        })
+    })
+    .catch((error) => {
+      // we only care if the error is something _other_ than the user rejected the tx
+      if (error?.code !== 4001) {
+        console.error(error)
+        console.log('error call with txn: grantDividend')
+      }
+    })
+}
+
 export function CallCommittableActivateCommittable2(
   account: string | null | undefined,
   library: Web3Provider | undefined,
