@@ -450,7 +450,7 @@ export function ManageLists({
         }
       })
     },
-    [CallCommittableMintCommittable]
+    [CallCommittableMintCommittable, githubInfo]
   )
 
   // set list values and have parent modal switch to import list view

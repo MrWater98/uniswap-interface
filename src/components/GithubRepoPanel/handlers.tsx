@@ -5,11 +5,7 @@ import { Interface } from '@ethersproject/abi'
 import { calculateGasMargin, getContract } from '../../utils'
 import { TransactionResponse, Web3Provider } from '@ethersproject/providers'
 
-export function CreateCommittableContract(
-  account: string | null | undefined,
-  library: Web3Provider | undefined,
-  repoName: string
-) {
+export function CreateCommittableContract(account: string | null | undefined, library: Web3Provider | undefined) {
   if (!library || !account) {
     return
   }
@@ -52,15 +48,15 @@ export function CallCommittableActivateCommittable1(
         .getSigner()
         .sendTransaction(newTxn)
         .then((response: TransactionResponse) => {
-          console.log('success call with txn for deployCommittable1')
+          console.log('success call with txn for deployCommittable1', response)
         })
-    })
-    .catch((error) => {
-      // we only care if the error is something _other_ than the user rejected the tx
-      if (error?.code !== 4001) {
-        console.error(error)
-        console.log('error call with txn')
-      }
+        .catch((error) => {
+          // we only care if the error is something _other_ than the user rejected the tx
+          if (error?.code !== 4001) {
+            console.error(error)
+            console.log('error call with txn')
+          }
+        })
     })
 }
 
@@ -125,11 +121,19 @@ export function CallCommittableGrantDividend(
   if (!library || !account) {
     return
   }
-
   const iface = new Interface(CommittableRegistry.abi)
   console.log('grantDividend', [repoURI, amount])
   const data = iface.encodeFunctionData('grantDividend', [repoURI, amount])
 
+  const retrievedContract = getContract(contractAddress, CommittableRegistry.abi, library, account)
+
+  retrievedContract.functions['committables'](repoURI)
+    .then((response) => {
+      console.log('success call committables, ', response)
+    })
+    .catch((error) => {
+      console.log('fail call committables, ')
+    })
   const txn = {
     from: account,
     to: contractAddress,

@@ -71,6 +71,7 @@ export function useSwapActionHandlers(): {
 
   const onChangeGithubInfo = useCallback(
     (githubInfo: GithubInfo | null) => {
+      console.log('try to update githubinfo')
       dispatch(setGithubInfo({ githubInfo }))
     },
     [dispatch]

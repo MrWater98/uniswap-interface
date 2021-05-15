@@ -9,10 +9,10 @@ export interface GithubInfo {
   githubID: string | null
   showRepo: boolean | null
   repos: {
-    name?: string
-    owner?: boolean
-    selected?: boolean
-    activated?: boolean
+    name: string
+    owner: boolean
+    selected: boolean
+    activated: boolean
     contract?: string
     dividend?: string
   }[]
