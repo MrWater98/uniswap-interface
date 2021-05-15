@@ -211,6 +211,7 @@ export default function GithubRepoPanel({
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
+  const [isManage, setIsManage] = useState(true)
 
   const [activate, setOn] = useState('activate')
   const activateOn = () => setOn('activated')
@@ -226,6 +227,9 @@ export default function GithubRepoPanel({
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
   }, [setModalOpen])
+
+  const manageOn = () => setIsManage(true)
+  const manageOff = () => setIsManage(false)
 
   const handleContractCreate = useCallback(
     (repoName: string, githubInfo: GithubInfo) => {
@@ -311,6 +315,7 @@ export default function GithubRepoPanel({
             </>
           )}
         </InputRow>
+
         <ButtonLight
           onClick={() => {
             if (!activated) handleContractCreate(repoName, githubInfo)
@@ -321,12 +326,20 @@ export default function GithubRepoPanel({
         <ButtonLight
           onClick={() => {
             listCommits(githubInfo.user, repoName, githubInfo)
+            manageOn()
             setModalOpen(true)
           }}
         >
           Forge
         </ButtonLight>
-        <ButtonLight>Divide</ButtonLight>
+        <ButtonLight
+          onClick={() => {
+            manageOff()
+            setModalOpen(true)
+          }}
+        >
+          Divide
+        </ButtonLight>
         {!hideInput && !hideBalance && (
           <FiatRow>
             <RowBetween>
@@ -367,6 +380,7 @@ export default function GithubRepoPanel({
           selectedCurrency={currency}
           otherSelectedCurrency={otherCurrency}
           showCommonBases={showCommonBases}
+          isManage={isManage}
         />
       )}
     </InputPanel>

@@ -171,50 +171,7 @@ export default function Pool() {
                 </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>
-
             <CTACards />
-            <MainContentWrapper>
-              {positionsLoading ? (
-                <LoadingRows>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </LoadingRows>
-              ) : positions && positions.length > 0 ? (
-                <PositionList positions={positions} />
-              ) : (
-                <NoLiquidity>
-                  <TYPE.mediumHeader color={theme.text3} textAlign="center">
-                    <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
-                    <div>{t('Your V3 liquidity positions will appear here.')}</div>
-                  </TYPE.mediumHeader>
-                  {!account ? (
-                    <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
-                      {t('Connect a wallet')}
-                    </ButtonPrimary>
-                  ) : (
-                    <ButtonGray
-                      as={Link}
-                      to="/migrate/v2"
-                      id="import-pool-link"
-                      style={{ marginTop: '2em', padding: '8px 16px', borderRadius: '12px', width: 'fit-content' }}
-                    >
-                      {t('Migrate V2 liquidity')}?&nbsp;&nbsp;
-                      <Download size={16} />
-                    </ButtonGray>
-                  )}
-                </NoLiquidity>
-              )}
-            </MainContentWrapper>
             <RowFixed justify="center" style={{ width: '100%' }}>
               <ButtonGray
                 as={Link}

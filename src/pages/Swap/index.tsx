@@ -2,6 +2,7 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
+
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import JSBI from 'jsbi'
@@ -18,7 +19,7 @@ import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import Loader from '../../components/Loader'
-import Row, { AutoRow, RowFixed } from '../../components/Row'
+import Row, { AutoRow, RowFixed, RowBetween } from '../../components/Row'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
@@ -64,8 +65,12 @@ import { commitsData } from './commits'
 
 import ReactDOM from 'react-dom'
 import GithubRepoPanel from '../../components/GithubRepoPanel'
-import { MenuItem } from 'components/SearchModal/styleds'
+import { FlyoutAlignment, NewMenu } from 'components/Menu'
 import { Contract } from '@ethersproject/contracts'
+import { LoadingRows } from '../Pool/styleds'
+import PositionList from 'components/PositionList'
+import { BookOpen, ChevronDown, Download, Inbox, PlusCircle, ChevronsRight, Layers } from 'react-feather'
+import { useV3Positions } from 'hooks/useV3Positions'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -75,6 +80,81 @@ const StyledInfo = styled(Info)`
   :hover {
     opacity: 0.8;
   }
+`
+
+const PageWrapper = styled(AutoColumn)`
+  max-width: 870px;
+  width: 100%;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    max-width: 800px;
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    max-width: 500px;
+  `};
+`
+const TitleRow = styled(RowBetween)`
+  color: ${({ theme }) => theme.text2};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
+    flex-direction: column-reverse;
+  `};
+`
+const ButtonRow = styled(RowFixed)`
+  & > *:not(:last-child) {
+    margin-right: 8px;
+  }
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  `};
+`
+const Menu = styled(NewMenu)`
+  margin-left: 0;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex: 1 1 auto;
+    width: 49%;
+  `};
+`
+const MenuItem = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+`
+const MoreOptionsButton = styled(ButtonGray)`
+  border-radius: 12px;
+  flex: 1 1 auto;
+  padding: 6px 8px;
+`
+const NoLiquidity = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  max-width: 300px;
+  min-height: 25vh;
+`
+const ResponsiveButtonPrimary = styled(ButtonPrimary)`
+  border-radius: 12px;
+  padding: 6px 8px;
+  width: fit-content;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex: 1 1 auto;
+    width: 49%;
+  `};
+`
+
+const MainContentWrapper = styled.main`
+  background-color: ${({ theme }) => theme.bg0};
+  padding: 8px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
 `
 
 export function ReposGithubInfo(githubInfo: any): string[] {
@@ -471,6 +551,8 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
 
+  const { positions, loading: positionsLoading } = useV3Positions(account)
+
   return (
     <>
       <TokenWarningModal
@@ -625,133 +707,50 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
                 </RowFixed>
               ) : null}
             </Row>
-
-            <BottomGrouping>
-              <ButtonLight onClick={() => handleOnClick(githubProvider)}>Connect to Github</ButtonLight>
-              {swapIsUnsupported ? (
-                <ButtonPrimary disabled={true}>
-                  <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
-                </ButtonPrimary>
-              ) : showWrap ? (
-                <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
-                  {wrapInputError ??
-                    (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
-                </ButtonPrimary>
-              ) : routeNotFound && userHasSpecifiedInputOutput ? (
-                <GreyCard style={{ textAlign: 'center' }}>
-                  <TYPE.main mb="4px">
-                    {isLoadingRoute ? (
-                      <Dots>Loading</Dots>
-                    ) : (
-                      `Insufficient liquidity for this trade.${singleHopOnly ? ' Try enabling multi-hop trades.' : ''}`
-                    )}
-                  </TYPE.main>
-                </GreyCard>
-              ) : showApproveFlow ? (
-                <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
-                  <AutoColumn style={{ width: '100%' }} gap="12px">
-                    <ButtonConfirmed
-                      onClick={handleApprove}
-                      disabled={
-                        approvalState !== ApprovalState.NOT_APPROVED ||
-                        approvalSubmitted ||
-                        signatureState === UseERC20PermitState.SIGNED
-                      }
-                      width="100%"
-                      altDisabledStyle={approvalState === ApprovalState.PENDING} // show solid button while waiting
-                      confirmed={
-                        approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
-                      }
-                    >
-                      <AutoRow justify="space-between">
-                        <span style={{ display: 'flex', alignItems: 'center' }}>
-                          <CurrencyLogo
-                            currency={currencies[Field.INPUT]}
-                            size={'20px'}
-                            style={{ marginRight: '8px' }}
-                          />
-                          {/* we need to shorten this string on mobile */}
-                          {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
-                            ? 'You can now trade ' + currencies[Field.INPUT]?.symbol
-                            : 'Allow the Uniswap Protocol to use your ' + currencies[Field.INPUT]?.symbol}
-                        </span>
-                        {approvalState === ApprovalState.PENDING ? (
-                          <Loader stroke="white" />
-                        ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
-                          signatureState === UseERC20PermitState.SIGNED ? (
-                          <CheckCircle size="20" color={theme.green1} />
-                        ) : (
-                          <MouseoverTooltip
-                            text={
-                              'You must give the Uniswap smart contracts permission to use your ' +
-                              currencies[Field.INPUT]?.symbol +
-                              '. You only have to do this once per token.'
-                            }
-                          >
-                            <HelpCircle size="20" color={'white'} />
-                          </MouseoverTooltip>
-                        )}
-                      </AutoRow>
-                    </ButtonConfirmed>
-                    <ButtonError
-                      onClick={() => {
-                        if (isExpertMode) {
-                          handleSwap()
-                        } else {
-                          setSwapState({
-                            tradeToConfirm: trade,
-                            attemptingTxn: false,
-                            swapErrorMessage: undefined,
-                            showConfirm: true,
-                            txHash: undefined,
-                          })
-                        }
-                      }}
-                      width="100%"
-                      id="swap-button"
-                      disabled={
-                        !isValid ||
-                        (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED) ||
-                        priceImpactTooHigh
-                      }
-                      error={isValid && priceImpactSeverity > 2}
-                    >
-                      <Text fontSize={16} fontWeight={500}>
-                        {priceImpactTooHigh ? `High Price Impact` : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
-                      </Text>
-                    </ButtonError>
-                  </AutoColumn>
-                </AutoRow>
+            <MainContentWrapper>
+              {positionsLoading ? (
+                <LoadingRows>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </LoadingRows>
+              ) : positions && positions.length > 0 ? (
+                <PositionList positions={positions} />
               ) : (
-                <ButtonError
-                  onClick={() => {
-                    if (isExpertMode) {
-                      handleSwap()
-                    } else {
-                      setSwapState({
-                        tradeToConfirm: trade,
-                        attemptingTxn: false,
-                        swapErrorMessage: undefined,
-                        showConfirm: true,
-                        txHash: undefined,
-                      })
-                    }
-                  }}
-                  id="swap-button"
-                  disabled={!isValid || priceImpactTooHigh || !!swapCallbackError}
-                  error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
-                >
-                  <Text fontSize={20} fontWeight={500}>
-                    {swapInputError
-                      ? swapInputError
-                      : priceImpactTooHigh
-                      ? `Price Impact Too High`
-                      : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
-                  </Text>
-                </ButtonError>
+                <NoLiquidity>
+                  <TYPE.mediumHeader color={theme.text3} textAlign="center">
+                    <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
+                    <div>{'Your repo and commit record appear here.'}</div>
+                  </TYPE.mediumHeader>
+                  {!account ? (
+                    <ButtonPrimary
+                      style={{ marginTop: '2em', padding: '8px 16px' }}
+                      onClick={() => handleOnClick(githubProvider)}
+                    >
+                      {'Connect to Github'}
+                    </ButtonPrimary>
+                  ) : (
+                    <ButtonGray
+                      as={Link}
+                      to="/migrate/v2"
+                      id="import-pool-link"
+                      style={{ marginTop: '2em', padding: '8px 16px', borderRadius: '12px', width: 'fit-content' }}
+                    >
+                      {'Migrate V2 liquidity'}?&nbsp;&nbsp;
+                    </ButtonGray>
+                  )}
+                </NoLiquidity>
               )}
-              {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-            </BottomGrouping>
+            </MainContentWrapper>
           </AutoColumn>
         </Wrapper>
       </AppBody>

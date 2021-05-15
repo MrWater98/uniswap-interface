@@ -18,6 +18,7 @@ interface CurrencySearchModalProps {
   showCommonBases?: boolean
   githubID?: string | null
   repoName?: string | null
+  isManage?: boolean
 }
 
 export enum CurrencyModalView {
@@ -36,13 +37,16 @@ export default function CurrencySearchModal({
   showCommonBases = false,
   githubID,
   repoName,
+  isManage,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.manage)
   const lastOpen = useLast(isOpen)
 
   useEffect(() => {
-    if (isOpen && !lastOpen) {
+    if (isOpen && !lastOpen && isManage) {
       setModalView(CurrencyModalView.manage)
+    } else if (isOpen && !lastOpen && !isManage) {
+      setModalView(CurrencyModalView.search)
     }
   }, [isOpen, lastOpen])
 
