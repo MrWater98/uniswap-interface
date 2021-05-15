@@ -29,6 +29,15 @@ import Card from 'components/Card'
 import { CurrencyModalView } from './CurrencySearchModal'
 import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
 
+import { Field, GithubInfo } from '../../state/swap/actions'
+import {
+  useDefaultsFromURLSearch,
+  useDerivedSwapInfo,
+  useSwapActionHandlers,
+  useSwapState,
+} from '../../state/swap/hooks'
+import { useExpertModeManager, useUserSingleHopOnly, useUserSlippageTolerance } from '../../state/user/hooks'
+
 const Wrapper = styled(Column)`
   width: 100%;
   height: 100%;
@@ -207,120 +216,9 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
   )
 })
 
-const commitRow = memo(function CommitRow({ listUrl }: { listUrl: string; githubID: string; repoName: string }) {
-  const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>((state) => state.lists.byUrl)
-  const dispatch = useDispatch<AppDispatch>()
-  const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
-
-  const theme = useTheme()
-  const listColor = useListColor(list?.logoURI)
-  const isActive = useIsListActive(listUrl)
-
-  const [open, toggle] = useToggle(false)
-  const node = useRef<HTMLDivElement>()
-  const [referenceElement, setReferenceElement] = useState<HTMLDivElement>()
-  const [popperElement, setPopperElement] = useState<HTMLDivElement>()
-
-  const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    placement: 'auto',
-    strategy: 'fixed',
-    modifiers: [{ name: 'offset', options: { offset: [8, 8] } }],
-  })
-
-  useOnClickOutside(node, open ? toggle : undefined)
-  console.log(listUrl)
-  const handleAcceptListUpdate = useCallback(() => {
-    if (!pending) return
-    ReactGA.event({
-      category: 'Lists',
-      action: 'Update List from List Select',
-      label: listUrl,
-    })
-    dispatch(acceptListUpdate(listUrl))
-  }, [dispatch, listUrl, pending])
-
-  const handleRemoveList = useCallback(() => {
-    ReactGA.event({
-      category: 'Lists',
-      action: 'Start Remove List',
-      label: listUrl,
-    })
-    if (window.prompt(`Please confirm you would like to remove this list by typing REMOVE`) === `REMOVE`) {
-      ReactGA.event({
-        category: 'Lists',
-        action: 'Confirm Remove List',
-        label: listUrl,
-      })
-      dispatch(removeList(listUrl))
-    }
-  }, [dispatch, listUrl])
-
-  const handleEnableList = useCallback(() => {
-    ReactGA.event({
-      category: 'Lists',
-      action: 'Enable List',
-      label: listUrl,
-    })
-    dispatch(enableList(listUrl))
-  }, [dispatch, listUrl])
-
-  const handleDisableList = useCallback(() => {
-    ReactGA.event({
-      category: 'Lists',
-      action: 'Disable List',
-      label: listUrl,
-    })
-    dispatch(disableList(listUrl))
-  }, [dispatch, listUrl])
-
-  if (!list) return null
-
-  return (
-    <RowWrapper active={isActive} bgColor={listColor} key={listUrl} id={listUrlRowHTMLId(listUrl)}>
-      {list.logoURI ? (
-        <ListLogo size="40px" style={{ marginRight: '1rem' }} logoURI={list.logoURI} alt={`${list.name} list logo`} />
-      ) : (
-        <div style={{ width: '24px', height: '24px', marginRight: '1rem' }} />
-      )}
-      <Column style={{ flex: '1' }}>
-        <Row>
-          <StyledTitleText active={isActive}>{list.name}</StyledTitleText>
-        </Row>
-        <RowFixed mt="4px">
-          <StyledListUrlText active={isActive} mr="6px">
-            {list.tokens.length} tokens
-          </StyledListUrlText>
-          <StyledMenu ref={node as any}>
-            <ButtonEmpty onClick={toggle} ref={setReferenceElement} padding="0">
-              <Settings stroke={isActive ? theme.bg1 : theme.text1} size={12} />
-            </ButtonEmpty>
-            {open && (
-              <PopoverContainer show={true} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
-                <div>{list && listVersionLabel(list.version)}</div>
-                <SeparatorDark />
-                <ExternalLink href={`https://tokenlists.org/token-list?url=${listUrl}`}>View list</ExternalLink>
-                <UnpaddedLinkStyledButton onClick={handleRemoveList} disabled={Object.keys(listsByUrl).length === 1}>
-                  Remove list
-                </UnpaddedLinkStyledButton>
-                {pending && (
-                  <UnpaddedLinkStyledButton onClick={handleAcceptListUpdate}>Update list</UnpaddedLinkStyledButton>
-                )}
-              </PopoverContainer>
-            )}
-          </StyledMenu>
-        </RowFixed>
-      </Column>
-      <ListToggle
-        isActive={isActive}
-        bgColor={listColor}
-        toggle={() => {
-          isActive ? handleDisableList() : handleEnableList()
-        }}
-      />
-    </RowWrapper>
-  )
-})
-
+function CommitRow(props: any) {
+  return <h1>{props.key}</h1>
+}
 const ListContainer = styled.div`
   padding: 1rem;
   height: 100%;
@@ -346,6 +244,19 @@ export function ManageLists({
   const [listUrlInput, setListUrlInput] = useState<string>('')
 
   const lists = useAllLists()
+
+  // swap state
+  const { independentField, typedValue, recipient, githubInfo } = useSwapState()
+  const {
+    v2Trade,
+    v3TradeState: { trade: v3Trade, state: v3TradeState },
+    currencyBalances,
+    parsedAmount,
+    currencies,
+    inputError: swapInputError,
+  } = useDerivedSwapInfo()
+
+  console.log(githubInfo)
 
   // sort by active but only if not visible
   const activeListUrls = useActiveListUrls()
@@ -471,6 +382,9 @@ export function ManageLists({
         <AutoColumn gap="md">
           {sortedLists.map((listUrl) => (
             <ListRow key={listUrl} listUrl={listUrl} />
+          ))}
+          {githubInfo?.commits.map((commit: any) => (
+            <CommitRow key={commit}></CommitRow>
           ))}
         </AutoColumn>
       </ListContainer>

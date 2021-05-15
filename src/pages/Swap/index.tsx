@@ -197,11 +197,12 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
               }),
               showCommits: false,
               commits: [],
+              user: userName,
             })
           })
       })
   }
-  const handleListCommits = useCallback((user: string, repo: string) => {
+  const handleListCommits = useCallback((user: string, repo: string, githubInfo: GithubInfo) => {
     fetch(`https://api.github.com/repos/${user}/${repo}/commits`)
       .then((res) => res.json())
       .then(
@@ -215,10 +216,11 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
           if (githubInfo !== null) {
             onChangeGithubInfo({
               githubID: githubInfo.githubID,
-              showRepo: false,
+              showRepo: true,
               repos: githubInfo.repos,
-              showCommits: true,
+              showCommits: false,
               commits: commits,
+              user: githubInfo.user,
             })
           }
         },
@@ -229,6 +231,7 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
           console.log('retrieve commits failed')
         }
       )
+    console.log(githubInfo)
   }, [])
 
   const handleActivated = useCallback((repoName: string, githubInfo: GithubInfo) => {
@@ -247,6 +250,7 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
         repos: _repos,
         showCommits: false,
         commits: [],
+        user: githubInfo.user,
       })
       console.log('test', _repos)
     }

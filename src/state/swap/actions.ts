@@ -11,6 +11,7 @@ export interface GithubInfo {
   repos: { name?: string; owner?: boolean; selected?: boolean; activated?: boolean }[]
   showCommits: boolean | null
   commits: { commitID?: string }[]
+  user: string
 }
 
 export const selectCurrency = createAction<{ field: Field; currencyId: string }>('swap/selectCurrency')

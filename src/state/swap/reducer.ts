@@ -34,7 +34,7 @@ const initialState: SwapState = {
     currencyId: '',
   },
   recipient: null,
-  githubInfo: { githubID: '', showRepo: false, repos: [], showCommits: false, commits: [] },
+  githubInfo: { githubID: '', showRepo: false, repos: [], showCommits: false, commits: [], user: '' },
 }
 
 export default createReducer<SwapState>(initialState, (builder) =>

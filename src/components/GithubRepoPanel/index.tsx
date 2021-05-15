@@ -172,7 +172,7 @@ interface GithubRepoPanelProps {
   customBalanceText?: string
   locked?: boolean
   repoName: string
-  listCommits: (user: string, repo: string) => void
+  listCommits: (user: string, repo: string, githubInfo: GithubInfo) => void
   setActivated: (repoName: string, githubInfo: GithubInfo) => void
   activated: boolean
   githubInfo: GithubInfo
@@ -215,6 +215,8 @@ export default function GithubRepoPanel({
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
 
+  console.log(githubInfo.user)
+
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
   }, [setModalOpen])
@@ -245,7 +247,14 @@ export default function GithubRepoPanel({
         <ButtonLight onClick={() => setActivated(repoName, githubInfo)}>
           {activated ? 'activated' : 'activate'}
         </ButtonLight>
-        <ButtonLight onClick={() => setModalOpen(true)}>Forge</ButtonLight>
+        <ButtonLight
+          onClick={() => {
+            listCommits(githubInfo.user, repoName, githubInfo)
+            setModalOpen(true)
+          }}
+        >
+          Forge
+        </ButtonLight>
         <ButtonLight>Divide</ButtonLight>
         {!hideInput && !hideBalance && (
           <FiatRow>
