@@ -18,9 +18,7 @@ export default function SwapHeader() {
     <StyledSwapHeader>
       <RowBetween>
         <RowFixed>
-          <TYPE.black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
-            Repo
-          </TYPE.black>
+          <TYPE.black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}></TYPE.black>
         </RowFixed>
         <RowFixed>
           {/* <TradeInfo disabled={!trade} trade={trade} /> */}

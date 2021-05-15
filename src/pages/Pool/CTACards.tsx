@@ -120,10 +120,12 @@ export default function CTACards() {
 
   return (
     <CTASection>
-      <img src="/images/rare-NFTDescriptor.svg" height="95%" width="95%" />
-      <img src="/images/rare-NFTDescriptor.svg" height="95%" width="95%" />
-      <img src="/images/rare-NFTDescriptor.svg" height="95%" width="95%" />
-      <img src="/images/rare-NFTDescriptor.svg" height="95%" width="95%" />
+      <a href="https://ipfs.io/ipfs/Qmb3s7AHsShtU9Q92QWSbCZ3GYWHYQfpKWc68pw5MTqc7p">
+        <img src="/images/45c57ca.svg" height="95%" width="95%" />
+      </a>
+      {/*<img src="/images/rare-NFTDescriptor.svg" height="95%" width="95%" />*/}
+      {/*<img src="/images/rare-NFTDescriptor.svg" height="95%" width="95%" />*/}
+      {/*<img src="/images/rare-NFTDescriptor.svg" height="95%" width="95%" />*/}
     </CTASection>
   )
 }

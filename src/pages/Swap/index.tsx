@@ -261,7 +261,7 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
     fetch('https://api.github.com/user/' + res.providerData[0].uid)
       .then((res) => res.json())
       .then((result) => {
-        const userName = result.login
+        const userName = 'yangzq12' // result.login
         fetch('https://api.github.com/users/' + userName + '/repos')
           .then((res) => res.json())
           .then((result) => {

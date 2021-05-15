@@ -323,15 +323,11 @@ export default function Header() {
         <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
       </Modal>
       <HeaderRow>
-        <Title href=".">
-          <UniIcon>
-            <img width={'24px'} src={darkMode ? LogoDark : Logo} alt="logo" />
-          </UniIcon>
-        </Title>
+        <Title href="."></Title>
       </HeaderRow>
       <HeaderLinks>
         <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-          repo
+          Repository
         </StyledNavLink>
         <StyledNavLink
           id={`pool-nav-link`}
@@ -344,11 +340,11 @@ export default function Header() {
             pathname.startsWith('/find')
           }
         >
-          gallery
+          Gallery
         </StyledNavLink>
-        <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
-          Vote
-        </StyledNavLink>
+        {/*<StyledNavLink id={`stake-nav-link`} to={'/vote'}>*/}
+        {/*  Vote*/}
+        {/*</StyledNavLink>*/}
       </HeaderLinks>
       <HeaderControls>
         <HeaderElement>
