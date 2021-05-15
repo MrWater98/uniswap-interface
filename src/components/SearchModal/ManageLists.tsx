@@ -165,6 +165,7 @@ const CommitRow = memo(function ListRow({
 
   const theme = useTheme()
 
+  const testStr = ''
   return (
     <RowWrapper active={isActive} bgColor={'#2172E5'} key={'tokenlist.aave.eth'} id={'list-row-tokenlist-aave-eth'}>
       {false ? (
@@ -183,7 +184,7 @@ const CommitRow = memo(function ListRow({
         </Row>
         <RowFixed mt="4px">
           <StyledListUrlText active={false} mr="6px">
-            15 token
+            {testStr}
           </StyledListUrlText>
           <StyledMenu ref={node as any}>
             <ButtonEmpty onClick={toggle} ref={setReferenceElement} padding="0"></ButtonEmpty>

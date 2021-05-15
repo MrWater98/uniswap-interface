@@ -7,8 +7,8 @@ import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { ButtonGray, ButtonLight } from '../Button'
-import { RowBetween, RowFixed } from '../Row'
+import { ButtonGray, ButtonLight, ButtonLight_1 } from '../Button'
+import Row, { RowBetween, RowFixed } from '../Row'
 import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
@@ -53,6 +53,7 @@ const Container = styled.div<{ hideInput: boolean }>`
   border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg2)};
   background-color: ${({ theme }) => theme.bg1};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
+  height: 120px;
   :focus,
   :hover {
     border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg3)};
@@ -152,6 +153,18 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     margin-right: 0.5rem;
   `};
+`
+const HeaderLinks = styled(Row)`
+  justify-self: center;
+  background-color: transparent;
+  width: fit-content;
+  padding: 4px;
+  padding-left: 200px;
+  border-radius: 16px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 10px;
+  overflow: auto;
 `
 
 export interface CommitsProps {
@@ -315,31 +328,32 @@ export default function GithubRepoPanel({
             </>
           )}
         </InputRow>
-
-        <ButtonLight
-          onClick={() => {
-            if (!activated) handleContractCreate(repoName, githubInfo)
-          }}
-        >
-          {activated ? 'activated' : 'activate'}
-        </ButtonLight>
-        <ButtonLight
-          onClick={() => {
-            listCommits(githubInfo.user, repoName, githubInfo)
-            manageOn()
-            setModalOpen(true)
-          }}
-        >
-          Forge
-        </ButtonLight>
-        <ButtonLight
-          onClick={() => {
-            manageOff()
-            setModalOpen(true)
-          }}
-        >
-          Divide
-        </ButtonLight>
+        <HeaderLinks>
+          <ButtonLight_1
+            onClick={() => {
+              if (!activated) handleContractCreate(repoName, githubInfo)
+            }}
+          >
+            {activated ? 'Activated' : 'Activate'}
+          </ButtonLight_1>
+          <ButtonLight_1
+            onClick={() => {
+              listCommits(githubInfo.user, repoName, githubInfo)
+              manageOn()
+              setModalOpen(true)
+            }}
+          >
+            Forge
+          </ButtonLight_1>
+          <ButtonLight_1
+            onClick={() => {
+              manageOff()
+              setModalOpen(true)
+            }}
+          >
+            Divide
+          </ButtonLight_1>
+        </HeaderLinks>
         {!hideInput && !hideBalance && (
           <FiatRow>
             <RowBetween>
