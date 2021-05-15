@@ -9,7 +9,7 @@ export enum Field {
 export interface GithubInfo {
   githubID: string | null
   showRepo: boolean | null
-  repos: { name?: string; owner?: boolean; selected?: boolean; activated?: boolean; contract?: Contract }[]
+  repos: { name?: string; owner?: boolean; selected?: boolean; activated?: boolean; contract?: string }[]
   showCommits: boolean | null
   commits: { commitID?: string }[]
   user: string

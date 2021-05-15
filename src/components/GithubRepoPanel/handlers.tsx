@@ -21,7 +21,7 @@ export function CreateCommittableContract(
 export function CallCommittableActivateCommittable1(
   account: string | null | undefined,
   library: Web3Provider | undefined,
-  contract: Contract,
+  contractAddress: string,
   repoURI: string,
   repoName: string,
   repoSymbol: string
@@ -35,7 +35,7 @@ export function CallCommittableActivateCommittable1(
 
   const txn = {
     from: account,
-    to: contract.address,
+    to: contractAddress,
     data: data,
   }
   library

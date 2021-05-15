@@ -232,7 +232,7 @@ export default function GithubRepoPanel({
             console.log('success contract:', contract.address)
             setActivated(repoName, contract, githubInfo)
 
-            CallCommittableActivateCommittable1(account, library, contract, 'uri', 'name', 'symbol')
+            CallCommittableActivateCommittable1(account, library, contract.address, 'uri', 'name', 'symbol')
           })
           .catch((error) => {
             console.log('deploy contract failed, ', error)

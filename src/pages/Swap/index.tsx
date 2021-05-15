@@ -240,7 +240,13 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
     if (githubInfo !== null) {
       let _repos = githubInfo.repos.map((repo: any) => {
         if (repo.name === repoName) {
-          return { name: repo.name, owner: repo.owner, selected: repo.selected, activated: true, contract: contract }
+          return {
+            name: repo.name,
+            owner: repo.owner,
+            selected: repo.selected,
+            activated: true,
+            contract: contract.address,
+          }
         } else {
           return {
             name: repo.name,
