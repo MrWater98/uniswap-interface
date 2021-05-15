@@ -1,5 +1,4 @@
 import { createAction } from '@reduxjs/toolkit'
-import { Contract } from '@ethersproject/contracts'
 
 export enum Field {
   INPUT = 'INPUT',
@@ -11,7 +10,7 @@ export interface GithubInfo {
   showRepo: boolean | null
   repos: { name?: string; owner?: boolean; selected?: boolean; activated?: boolean; contract?: string }[]
   showCommits: boolean | null
-  commits: { commitID?: string; commitName?: string; commitDate?: string }[]
+  commits: { commitID?: string; commitName?: string; commitDate?: string; repo: string }[]
   user: string
 }
 

@@ -37,6 +37,8 @@ import {
   useSwapState,
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserSingleHopOnly, useUserSlippageTolerance } from '../../state/user/hooks'
+import { CallCommittableMintCommittable } from '../GithubRepoPanel/handlers'
+import { useActiveWeb3React } from '../../hooks'
 
 const Wrapper = styled(Column)`
   width: 100%;
@@ -100,7 +102,15 @@ const RowWrapper = styled(Row)<{ bgColor: string; active: boolean }>`
 function listUrlRowHTMLId(listUrl: string) {
   return `list-row-${listUrl.replace(/\./g, '-')}`
 }
-const CommitRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
+const CommitRow = memo(function ListRow({
+  listUrl,
+  repoName,
+  handleEnable,
+}: {
+  listUrl: string
+  repoName: string
+  handleEnable: (commitId: string, repoName: string) => void
+}) {
   const dispatch = useDispatch<AppDispatch>()
 
   const isActive = useIsListActive(listUrl)
@@ -123,6 +133,7 @@ const CommitRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
       label: listUrl,
     })
     dispatch(enableList(listUrl))
+    handleEnable(listUrl, repoName)
   }, [dispatch, listUrl])
 
   const handleDisableList = useCallback(() => {
@@ -244,6 +255,8 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string; listUrlNam
       action: 'Enable List',
       label: listUrl,
     })
+    console.log('enable list item: ', listUrl)
+
     dispatch(enableList(listUrl))
   }, [dispatch, listUrl])
 
@@ -421,6 +434,24 @@ export function ManageLists({
   // check if list is already imported
   const isImported = Object.keys(lists).includes(listUrlInput)
 
+  const { account, chainId, library } = useActiveWeb3React()
+  const handleEnableRow = useCallback(
+    (commitId: string, repoName: string) => {
+      console.log('try to enable commit ', commitId, ' of repo ', repoName)
+      if (!githubInfo) return
+      githubInfo.repos.map((repo) => {
+        if (repo.name === repoName) {
+          if (!repo.contract) {
+            console.log(repo.name, ' should be activated first.')
+            return
+          }
+          CallCommittableMintCommittable(account, library, repo.contract, repoName, 0x123456, 'tokenURI')
+        }
+      })
+    },
+    [CallCommittableMintCommittable]
+  )
+
   // set list values and have parent modal switch to import list view
   const handleImport = useCallback(() => {
     if (!tempList) return
@@ -465,8 +496,13 @@ export function ManageLists({
       <Separator />
       <ListContainer>
         <AutoColumn gap="md">
-          {githubInfo?.commits.map((listUrl) => (
-            <CommitRow key={listUrl.commitID as string} listUrl={listUrl.commitID as string} />
+          {githubInfo?.commits.map((listUrl, index) => (
+            <CommitRow
+              key={index}
+              listUrl={listUrl.commitID as string}
+              repoName={listUrl.repo}
+              handleEnable={handleEnableRow}
+            />
           ))}
         </AutoColumn>
       </ListContainer>

@@ -209,10 +209,15 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
       .then(
         (result) => {
           const extract = result.map((item: any) => {
-            return { commitID: item.sha, commitName: item.commit.author.name, commitDate: item.commit.author.date }
+            return {
+              commitID: item.sha,
+              commitName: item.commit.author.name,
+              commitDate: item.commit.author.date,
+              repo: repo,
+            }
           })
           const commits = commitsData.map((item: any) => {
-            return { commitID: item.sha }
+            return { commitID: item.sha, repo: repo }
           })
           if (githubInfo !== null) {
             onChangeGithubInfo({
