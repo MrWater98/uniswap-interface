@@ -31,6 +31,7 @@ export function CallCommittableActivateCommittable1(
   }
 
   const iface = new Interface(CommittableRegistry.abi)
+  console.log('activateCommittable', [repoURI, repoName, repoSymbol])
   const data = iface.encodeFunctionData('activateCommittable', [repoURI, repoName, repoSymbol])
 
   const txn = {
@@ -52,6 +53,52 @@ export function CallCommittableActivateCommittable1(
         .sendTransaction(newTxn)
         .then((response: TransactionResponse) => {
           console.log('success call with txn for deployCommittable1')
+        })
+    })
+    .catch((error) => {
+      // we only care if the error is something _other_ than the user rejected the tx
+      if (error?.code !== 4001) {
+        console.error(error)
+        console.log('error call with txn')
+      }
+    })
+}
+
+export function CallCommittableMintCommittable(
+  account: string | null | undefined,
+  library: Web3Provider | undefined,
+  contractAddress: string,
+  repoURI: string,
+  commitId: number,
+  tokenURI: string
+) {
+  if (!library || !account) {
+    return
+  }
+
+  const iface = new Interface(CommittableRegistry.abi)
+  console.log('mintCommittable', [repoURI, commitId, tokenURI, account])
+  const data = iface.encodeFunctionData('mintCommittable', [repoURI, commitId, tokenURI, account])
+
+  const txn = {
+    from: account,
+    to: contractAddress,
+    data: data,
+  }
+  library
+    .getSigner()
+    .estimateGas(txn)
+    .then((estimate) => {
+      const newTxn = {
+        ...txn,
+        gasLimit: calculateGasMargin(estimate),
+      }
+
+      return library
+        .getSigner()
+        .sendTransaction(newTxn)
+        .then((response: TransactionResponse) => {
+          console.log('success call with txn for MintCommittable for commitId: ', commitId)
         })
     })
     .catch((error) => {

@@ -19,7 +19,11 @@ import { Lock } from 'react-feather'
 import { AutoColumn } from 'components/Column'
 import { FiatValue } from './FiatValue'
 import { GithubInfo } from 'state/swap/actions'
-import { CallCommittableActivateCommittable1, CreateCommittableContract } from './handlers'
+import {
+  CallCommittableActivateCommittable1,
+  CallCommittableMintCommittable,
+  CreateCommittableContract,
+} from './handlers'
 import { Contract } from '@ethersproject/contracts'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
@@ -232,7 +236,8 @@ export default function GithubRepoPanel({
             console.log('success contract:', contract.address)
             setActivated(repoName, contract, githubInfo)
 
-            CallCommittableActivateCommittable1(account, library, contract.address, 'uri', 'name', 'symbol')
+            CallCommittableActivateCommittable1(account, library, contract.address, repoName, repoName, 'symbol')
+            // CallCommittableMintCommittable(account, library, contract.address, repoName, 0x1234567, 'tokenURI')
           })
           .catch((error) => {
             console.log('deploy contract failed, ', error)
