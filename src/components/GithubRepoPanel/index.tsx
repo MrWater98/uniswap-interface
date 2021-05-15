@@ -19,6 +19,7 @@ import { Lock } from 'react-feather'
 import { AutoColumn } from 'components/Column'
 import { FiatValue } from './FiatValue'
 import { GithubInfo } from 'state/swap/actions'
+import { CreateCommittableContract } from './handlers'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -211,7 +212,7 @@ export default function GithubRepoPanel({
   const activeStr = 'activate'
   const activedStr = 'activated'
 
-  const { account } = useActiveWeb3React()
+  const { account, chainId, library } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
 
@@ -220,6 +221,14 @@ export default function GithubRepoPanel({
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
   }, [setModalOpen])
+
+  const handleContractCreate = useCallback(
+    (repoName: string) => {
+      CreateCommittableContract(account, library, repoName)
+    },
+    [CreateCommittableContract, account, library]
+  )
+
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
       {locked && (
@@ -255,7 +264,7 @@ export default function GithubRepoPanel({
         >
           Forge
         </ButtonLight>
-        <ButtonLight>Divide</ButtonLight>
+        <ButtonLight onClick={() => handleContractCreate(repoName)}>Divide</ButtonLight>
         {!hideInput && !hideBalance && (
           <FiatRow>
             <RowBetween>

@@ -609,12 +609,11 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
             </Row>
 
             <BottomGrouping>
+              <ButtonLight onClick={() => handleOnClick(githubProvider)}>Connect to Github</ButtonLight>
               {swapIsUnsupported ? (
                 <ButtonPrimary disabled={true}>
                   <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
                 </ButtonPrimary>
-              ) : !account ? (
-                <ButtonLight onClick={() => handleOnClick(githubProvider)}>Connect to Github</ButtonLight>
               ) : showWrap ? (
                 <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                   {wrapInputError ??
