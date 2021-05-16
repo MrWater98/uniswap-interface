@@ -351,6 +351,8 @@ export default function GithubRepoPanel({
         </InputRow>
         <HeaderLinks>
           <ButtonLight_1
+            backgroundColor={'green'}
+            disabled={activated}
             onClick={() => {
               if (!activated) handleContractCreate(repoName, githubInfo)
             }}
