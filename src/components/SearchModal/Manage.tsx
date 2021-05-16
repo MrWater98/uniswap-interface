@@ -67,7 +67,7 @@ export default function Manage({
         <RowBetween>
           <ArrowLeft style={{ cursor: 'pointer' }} onClick={() => setModalView(CurrencyModalView.search)} />
           <Text fontWeight={500} fontSize={20}>
-            Manage
+            Manage Commits
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>

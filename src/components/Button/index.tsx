@@ -126,9 +126,10 @@ export const ButtonLight_1 = styled(Base)`
   }
   :disabled {
     opacity: 0.4;
+    background-color: cadetblue;
     :hover {
       cursor: auto;
-      background-color: ${({ theme }) => theme.primary5};
+      background-color: ${({ theme }) => 'green'};
       box-shadow: none;
       border: 1px solid transparent;
       outline: none;
