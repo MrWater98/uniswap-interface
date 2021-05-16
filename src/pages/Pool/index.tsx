@@ -149,39 +149,7 @@ export default function Pool() {
         <SwapPoolTabs active={'pool'} />
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
-            <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-              <HideSmall>
-                <TYPE.mediumHeader>{t('Pools Overview')}</TYPE.mediumHeader>
-              </HideSmall>
-              <ButtonRow>
-                <Menu
-                  menuItems={menuItems}
-                  flyoutAlignment={FlyoutAlignment.LEFT}
-                  ToggleUI={(props: any) => (
-                    <MoreOptionsButton {...props}>
-                      <TYPE.body style={{ alignItems: 'center', display: 'flex' }}>
-                        {t('More')}
-                        <ChevronDown size={15} />
-                      </TYPE.body>
-                    </MoreOptionsButton>
-                  )}
-                />
-                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
-                  + {t('New Position')}
-                </ResponsiveButtonPrimary>
-              </ButtonRow>
-            </TitleRow>
             <CTACards />
-            <RowFixed justify="center" style={{ width: '100%' }}>
-              <ButtonGray
-                as={Link}
-                to="/pool/v2"
-                id="import-pool-link"
-                style={{ padding: '8px 16px', borderRadius: '12px', width: 'fit-content' }}
-              >
-                <TYPE.subHeader>{t('Looking for your V2 Liquidity')}?</TYPE.subHeader>
-              </ButtonGray>
-            </RowFixed>
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>

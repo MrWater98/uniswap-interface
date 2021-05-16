@@ -59,9 +59,9 @@
         </textPath>
         <textPath startOffset="0%" fill="white" font-family="'Courier New', monospace" font-size="15px" xlink:href="#text-path-a">Commit: 0x45c57ca2e9d32bbad0a7460cf8b11583af9580a1 <animate additive="sum" attributeName="startOffset" from="0%" to="100%" begin="0s" dur="30s" repeatCount="indefinite" />
         </textPath>
-        <textPath startOffset="50%" fill="white" font-family="'Courier New', monospace" font-size="15px" xlink:href="#text-path-a">https://ipfs.io/ipfs/QmWj3JcuAnvP7q9JZPUfveMJh8CB1JAMbgHWrT7ezoyuFR <animate additive="sum" attributeName="startOffset" from="0%" to="100%" begin="0s" dur="30s" repeatCount="indefinite" />
+        <textPath startOffset="50%" fill="white" font-family="'Courier New', monospace" font-size="15px" xlink:href="#text-path-a">https://ipfs.io/ipfs/Qmb3s7AHsShtU9Q92QWSbCZ3GYWHYQfpKWc68pw5MTqc7p <animate additive="sum" attributeName="startOffset" from="0%" to="100%" begin="0s" dur="30s" repeatCount="indefinite" />
         </textPath>
-        <textPath startOffset="-50%" fill="white" font-family="'Courier New', monospace" font-size="15px" xlink:href="#text-path-a">https://ipfs.io/ipfs/QmWj3JcuAnvP7q9JZPUfveMJh8CB1JAMbgHWrT7ezoyuFR<animate additive="sum" attributeName="startOffset" from="0%" to="100%" begin="0s" dur="30s" repeatCount="indefinite" />
+        <textPath startOffset="-50%" fill="white" font-family="'Courier New', monospace" font-size="15px" xlink:href="#text-path-a">https://ipfs.io/ipfs/Qmb3s7AHsShtU9Q92QWSbCZ3GYWHYQfpKWc68pw5MTqc7p<animate additive="sum" attributeName="startOffset" from="0%" to="100%" begin="0s" dur="30s" repeatCount="indefinite" />
         </textPath>
     </text>
     <g mask="url(#fade-symbol)">

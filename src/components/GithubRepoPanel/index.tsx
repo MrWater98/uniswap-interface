@@ -1,6 +1,6 @@
 import { Pair } from '@uniswap/v2-sdk'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, RefObject } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -21,10 +21,12 @@ import { FiatValue } from './FiatValue'
 import { GithubInfo } from 'state/swap/actions'
 import {
   CallCommittableActivateCommittable1,
+  CallCommittableGrantDividend,
   CallCommittableMintCommittable,
   CreateCommittableContract,
 } from './handlers'
 import { Contract } from '@ethersproject/contracts'
+import { SearchInput } from '../SearchModal/styleds'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -159,7 +161,7 @@ const HeaderLinks = styled(Row)`
   background-color: transparent;
   width: fit-content;
   padding: 4px;
-  padding-left: 200px;
+  padding-left: 10px;
   border-radius: 16px;
   display: grid;
   grid-auto-flow: column;
@@ -246,7 +248,7 @@ export default function GithubRepoPanel({
 
   const handleContractCreate = useCallback(
     (repoName: string, githubInfo: GithubInfo) => {
-      const contractPromise = CreateCommittableContract(account, library, repoName)
+      const contractPromise = CreateCommittableContract(account, library)
       if (contractPromise) {
         contractPromise
           .then((contract) => {
@@ -254,7 +256,6 @@ export default function GithubRepoPanel({
             setActivated(repoName, contract, githubInfo)
 
             CallCommittableActivateCommittable1(account, library, contract.address, repoName, repoName, 'symbol')
-            // CallCommittableMintCommittable(account, library, contract.address, repoName, 0x1234567, 'tokenURI')
           })
           .catch((error) => {
             console.log('deploy contract failed, ', error)
@@ -262,7 +263,27 @@ export default function GithubRepoPanel({
           })
       }
     },
-    [CreateCommittableContract, account, library]
+    [CreateCommittableContract, account, library, githubInfo]
+  )
+
+  const handleDividend = useCallback(
+    (dividend: string) => {
+      console.log('dividend for ', repoName, ' with value: ', dividend)
+      console.log('in handleDividend: ', githubInfo)
+      if (!githubInfo) return
+      githubInfo.repos.map((repo) => {
+        if (repo.name === repoName) {
+          if (!repo.contract) {
+            console.log(repo.name, ' should be activated first.')
+            return
+          }
+          const numberDividend = +dividend
+          console.log('dividend to ', repo.contract)
+          CallCommittableGrantDividend(account, library, repo.contract, repoName, 1)
+        }
+      })
+    },
+    [CallCommittableGrantDividend, repoName, githubInfo]
   )
 
   return (
@@ -347,12 +368,12 @@ export default function GithubRepoPanel({
           </ButtonLight_1>
           <ButtonLight_1
             onClick={() => {
-              manageOff()
-              setModalOpen(true)
+              handleDividend('0.1')
             }}
           >
             Divide
           </ButtonLight_1>
+          <SearchInput type="text" id="token-search-input" placeholder={''} autoComplete="off" />
         </HeaderLinks>
         {!hideInput && !hideBalance && (
           <FiatRow>
@@ -395,6 +416,7 @@ export default function GithubRepoPanel({
           otherSelectedCurrency={otherCurrency}
           showCommonBases={showCommonBases}
           isManage={isManage}
+          handleDividend={handleDividend}
         />
       )}
     </InputPanel>

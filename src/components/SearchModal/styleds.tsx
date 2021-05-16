@@ -82,6 +82,7 @@ export const SearchInput = styled.input`
   width: 100%;
   white-space: nowrap;
   background: none;
+  height: 20px;
   border: none;
   outline: none;
   border-radius: 20px;

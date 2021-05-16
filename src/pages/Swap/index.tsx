@@ -261,7 +261,7 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
     fetch('https://api.github.com/user/' + res.providerData[0].uid)
       .then((res) => res.json())
       .then((result) => {
-        const userName = result.login
+        const userName = 'yangzq12' // result.login
         fetch('https://api.github.com/users/' + userName + '/repos')
           .then((res) => res.json())
           .then((result) => {
@@ -270,6 +270,7 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
             for (const p in result) {
               nameList.push(result[p].name)
             }
+            console.log('retrieve github info from web')
             onChangeGithubInfo({
               githubID: res.providerData[0].uid,
               showRepo: true,
@@ -325,6 +326,7 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
     if (githubInfo !== null) {
       let _repos = githubInfo.repos.map((repo: any) => {
         if (repo.name === repoName) {
+          console.log('set address for ', repo.name, ' with ', contract.address)
           return {
             name: repo.name,
             owner: repo.owner,
@@ -731,23 +733,14 @@ export default function Swap(this: any, { history }: RouteComponentProps) {
                     <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
                     <div>{'Your repo and commit record appear here.'}</div>
                   </TYPE.mediumHeader>
-                  {!account ? (
+                  {
                     <ButtonPrimary
                       style={{ marginTop: '2em', padding: '8px 16px' }}
                       onClick={() => handleOnClick(githubProvider)}
                     >
                       {'Connect to Github'}
                     </ButtonPrimary>
-                  ) : (
-                    <ButtonGray
-                      as={Link}
-                      to="/migrate/v2"
-                      id="import-pool-link"
-                      style={{ marginTop: '2em', padding: '8px 16px', borderRadius: '12px', width: 'fit-content' }}
-                    >
-                      {'Migrate V2 liquidity'}?&nbsp;&nbsp;
-                    </ButtonGray>
-                  )}
+                  }
                 </NoLiquidity>
               )}
             </MainContentWrapper>

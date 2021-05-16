@@ -8,6 +8,9 @@ import usePrevious from 'hooks/usePrevious'
 import Manage from './Manage'
 import { TokenList } from '@uniswap/token-lists'
 import { ImportList } from './ImportList'
+import { ButtonLight } from '../Button'
+import { AutoColumn } from '../Column'
+import styled from 'styled-components'
 
 interface CurrencySearchModalProps {
   isOpen: boolean
@@ -19,6 +22,7 @@ interface CurrencySearchModalProps {
   githubID?: string | null
   repoName?: string | null
   isManage?: boolean
+  handleDividend?: (dividend: string) => void
 }
 
 export enum CurrencyModalView {
@@ -27,6 +31,17 @@ export enum CurrencyModalView {
   importToken,
   importList,
 }
+
+const Container = styled.div<{ hideInput: boolean }>`
+  border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
+  border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg2)};
+  background-color: ${({ theme }) => theme.bg1};
+  width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
+  :focus,
+  :hover {
+    border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg3)};
+  }
+`
 
 export default function CurrencySearchModal({
   isOpen,
@@ -38,6 +53,7 @@ export default function CurrencySearchModal({
   githubID,
   repoName,
   isManage,
+  handleDividend,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.manage)
   const lastOpen = useLast(isOpen)
@@ -71,20 +87,37 @@ export default function CurrencySearchModal({
   // change min height if not searching
   const minHeight = modalView === CurrencyModalView.importToken || modalView === CurrencyModalView.importList ? 40 : 80
 
+  const wrappedHandleDividend = useCallback(
+    (dividend: string) => {
+      if (handleDividend) handleDividend(dividend)
+    },
+    [handleDividend]
+  )
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={minHeight}>
       {modalView === CurrencyModalView.search ? (
-        <CurrencySearch
-          isOpen={isOpen}
-          onDismiss={onDismiss}
-          onCurrencySelect={handleCurrencySelect}
-          selectedCurrency={selectedCurrency}
-          otherSelectedCurrency={otherSelectedCurrency}
-          showCommonBases={showCommonBases}
-          showImportView={() => setModalView(CurrencyModalView.importToken)}
-          setImportToken={setImportToken}
-          showManageView={() => setModalView(CurrencyModalView.manage)}
-        />
+        <Container hideInput={false}>
+          <CurrencySearch
+            isOpen={isOpen}
+            onDismiss={onDismiss}
+            onCurrencySelect={handleCurrencySelect}
+            selectedCurrency={selectedCurrency}
+            otherSelectedCurrency={otherSelectedCurrency}
+            showCommonBases={showCommonBases}
+            showImportView={() => setModalView(CurrencyModalView.importToken)}
+            setImportToken={setImportToken}
+            showManageView={() => setModalView(CurrencyModalView.manage)}
+          />
+          <ButtonLight
+            onClick={(e) => {
+              if (handleDividend !== undefined) {
+                handleDividend('1')
+              }
+            }}
+          >
+            Confirm
+          </ButtonLight>
+        </Container>
       ) : modalView === CurrencyModalView.importToken && importToken ? (
         <ImportToken
           tokens={[importToken]}
